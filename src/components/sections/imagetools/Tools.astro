@@ -1,0 +1,67 @@
+---
+import Image from "astro/components/Image.astro"
+import figma from "@images/figma.webp"
+import Imagenes from "@components/sections/imagetools/imagesTools.astro";
+---
+
+<section class="w-full overflow-x-hidden pt-10 md:pt-14 lg:pt-16 pb-6 md:pb-10">
+    <div class="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16">
+
+        <!-- ── Mobile: texto centrado (< md) ── -->
+        <div class="md:hidden text-center">
+            <p class="text-[#FF7070] text-lg font-bold font-inter">
+                Nuestras Herramientas de Punta
+            </p>
+            <h2 class="text-2xl text-[#36455D] dark:text-[#F5F5F7] font-bold font-inter leading-tight mt-1">
+                Full todoterreno.
+            </h2>
+            <p class="mt-3 text-base font-bold font-inter text-[#31323D] dark:text-[#F5F5F7] max-w-[340px] mx-auto">
+                Construimos soluciones digitales con las tecnologías más avanzadas del mercado. Desde el backend hasta la interfaz de usuario, usamos herramientas que garantizan rendimiento, escalabilidad y seguridad.
+            </p>
+        </div>
+
+        <!-- ── Desktop: texto + Figma en fila (md+) ── -->
+        <div class="hidden md:flex flex-row-reverse justify-around items-center mt-10 2xl:mt-14">
+            <div class="flex flex-col items-start max-w-[380px] lg:max-w-[420px] xl:max-w-[480px] 2xl:max-w-[560px]">
+                <p class="text-[#FF7070] text-base lg:text-lg xl:text-xl font-bold font-inter">
+                    Nuestras Herramientas de Punta
+                </p>
+                <h2 class="text-3xl lg:text-4xl xl:text-5xl text-[#36455D] dark:text-[#F5F5F7] font-bold font-inter leading-tight">
+                    Full<br /> todoterreno.
+                </h2>
+                <p class="mt-3 text-sm lg:text-base xl:text-lg font-bold font-inter text-[#31323D] dark:text-[#F5F5F7]">
+                    Construimos soluciones digitales con las tecnologías más avanzadas del mercado. Desde el backend hasta la interfaz de usuario, usamos herramientas que garantizan rendimiento, escalabilidad y seguridad.
+                </p>
+            </div>
+            <div class="ml-16 lg:ml-24 xl:ml-32">
+                <Image
+                    src={figma}
+                    alt="Figma — herramienta de diseño UI/UX"
+                    class="object-contain w-14 lg:w-20 xl:w-24 img-hover-grow"
+                />
+            </div>
+        </div>
+
+        <!-- ── Grid de tecnologías ── -->
+        <Imagenes />
+
+        <!-- ── Frase final ── -->
+        <div class="w-full flex justify-center mb-8 md:mb-12 mt-6 md:mt-4">
+            <p class="text-base md:text-sm lg:text-base xl:text-lg font-bold font-inter text-[#31323D] dark:text-[#F5F5F7] max-w-[380px] text-center">
+                <span class="text-[#FF7070] font-inter text-base lg:text-lg xl:text-xl">¿Necesitas una tecnología diferente?</span>
+                <br />
+                La tecnología avanza, y nosotros con ella. Si no lo sabemos, lo aprendemos. Si lo aprendemos, lo perfeccionamos.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<style>
+.img-hover-grow:hover {
+    scale: 1.3;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    cursor: pointer;
+}
+</style>

@@ -1,0 +1,239 @@
+---
+import Logo from "@components/Shared/Logo.astro";
+import DarkMode from '@components/sections/nav/Darkmode.astro';
+import Conocenos from "@components/Shared/buttonConocenos.astro"
+
+const links = [
+    { name: 'Inicio', href: '/' },
+    { name: 'Servicios', href: '#servicios' },
+]
+---
+
+<header class="w-full sticky top-0 z-50 px-4 sm:px-6 py-2">
+    <div class="glass-header w-full max-w-[1400px] mx-auto rounded-2xl px-5 border border-white/40 dark:border-white/10">
+        <nav
+            class="h-[62px] flex items-center justify-between"
+            aria-label="Navegación principal"
+        >
+            <!-- Logo -->
+            <a href="/" aria-label="Slyfox — ir al inicio">
+                <Logo className="w-[80px] sm:w-[90px] lg:w-[100px] xl:w-[110px]" />
+            </a>
+
+            <!-- Links desktop (md+) -->
+            <ul
+                class="hidden md:flex items-center gap-7 text-[14px] font-inter text-[#423a3a] dark:text-[#ffffffeb] 2xl:text-[18px]"
+                role="list"
+            >
+                {links.map(link => (
+                    <li>
+                        <a href={link.href} class="nav-link">{link.name}</a>
+                    </li>
+                ))}
+                <li>
+                    <Conocenos className="md:rounded-full xl:hidden font-inter w-[105px] h-8 text-md text-[#F5F5F7] bg-[#5137F0] 2xl:w-[120px] 2xl:h-10 2xl:text-[18px]" />
+                </li>
+            </ul>
+
+            <!-- Desktop grande: Conócenos + DarkMode -->
+            <div class="hidden xl:flex items-center gap-3">
+                <Conocenos className="rounded-full font-inter w-[105px] h-8 text-md text-[#F5F5F7] bg-[#5137F0] 2xl:w-[120px] 2xl:h-10 2xl:text-[18px]" />
+                <DarkMode />
+            </div>
+
+            <!-- Mobile: DarkMode + hamburger -->
+            <div class="flex items-center gap-3 md:hidden">
+                <DarkMode />
+                <button
+                    id="menu-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu"
+                    aria-label="Abrir menú de navegación"
+                    class="flex flex-col justify-center items-center w-9 h-9 rounded-full text-[#31323D] dark:text-[#F5F5F7] focus-visible:outline-2 focus-visible:outline-[#5137F0]"
+                >
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line my-1"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+
+            <!-- DarkMode tablet (md visible, xl oculto) -->
+            <div class="hidden md:flex xl:hidden items-center">
+                <DarkMode />
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- Overlay oscuro detrás del menú -->
+<div id="menu-overlay" class="overlay-hidden fixed inset-0 z-30 md:hidden" aria-hidden="true"></div>
+
+<!-- Mobile floating menu — fixed, burbuja flotante desconectada del header -->
+<div
+    id="mobile-menu"
+    class="menu-hidden fixed z-40 md:hidden left-4 right-4"
+    style="top: 82px"
+    role="dialog"
+    aria-label="Menú de navegación"
+    aria-modal="true"
+>
+    <div class="glass-menu rounded-3xl p-6 shadow-2xl border border-white/20 dark:border-white/[0.05]">
+        <ul class="flex flex-col font-inter text-[#2d2d2d] dark:text-[#ffffffeb] text-base" role="list">
+            {links.map(link => (
+                <li>
+                    <a href={link.href} class="nav-link-mob block py-3.5 px-2 border-b border-black/5 dark:border-white/[0.06] text-lg font-semibold">
+                        {link.name}
+                    </a>
+                </li>
+            ))}
+            <li class="pt-5">
+                <Conocenos className="rounded-full font-inter w-full h-11 text-base text-[#F5F5F7] bg-[#5137F0]" />
+            </li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    /* ── Glassmorphism header ── */
+    .glass-header {
+        background: rgba(251, 251, 251, 0.55);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+    }
+    :global(.dark) .glass-header {
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+    }
+
+    /* ── Glassmorphism mobile menu ── */
+    .glass-menu {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+    }
+    :global(.dark) .glass-menu {
+        background: rgba(12, 12, 14, 0.78);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+    }
+
+    /* ── Overlay ── */
+    .overlay-hidden {
+        opacity: 0;
+        pointer-events: none;
+        background: rgba(0, 0, 0, 0);
+        transition: opacity 0.3s ease, background 0.3s ease;
+    }
+    .overlay-visible {
+        opacity: 1;
+        pointer-events: all;
+        background: rgba(0, 0, 0, 0.25);
+        transition: opacity 0.3s ease, background 0.3s ease;
+    }
+
+    /* ── Menú flotante: hidden / visible ── */
+    .menu-hidden {
+        opacity: 0;
+        transform: scale(0.95) translateY(-12px);
+        pointer-events: none;
+        transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .menu-visible {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        pointer-events: all;
+        transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── Nav links desktop ── */
+    .nav-link {
+        position: relative;
+        transition: color 0.3s ease-in-out;
+    }
+    .nav-link:hover { color: #FF7070; }
+    .nav-link::after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        background: #FF7070;
+        transition: width 0.3s ease-in-out;
+        bottom: -4px;
+        left: 0;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── Nav links mobile ── */
+    .nav-link-mob {
+        transition: color 0.2s ease, padding-left 0.2s ease;
+    }
+    .nav-link-mob:hover {
+        color: #FF7070;
+        padding-left: 0.75rem;
+    }
+
+    /* ── Hamburger ── */
+    .hamburger-line {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: currentColor;
+        border-radius: 2px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    [aria-expanded="true"] .hamburger-line:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+    [aria-expanded="true"] .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+    [aria-expanded="true"] .hamburger-line:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+</style>
+
+<script>
+    const toggle  = document.getElementById('menu-toggle') as HTMLButtonElement | null;
+    const menu    = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('menu-overlay');
+
+    function openMenu() {
+        toggle?.setAttribute('aria-expanded', 'true');
+        menu?.classList.remove('menu-hidden');
+        menu?.classList.add('menu-visible');
+        overlay?.classList.remove('overlay-hidden');
+        overlay?.classList.add('overlay-visible');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        toggle?.setAttribute('aria-expanded', 'false');
+        menu?.classList.remove('menu-visible');
+        menu?.classList.add('menu-hidden');
+        overlay?.classList.remove('overlay-visible');
+        overlay?.classList.add('overlay-hidden');
+        document.body.style.overflow = '';
+    }
+
+    toggle?.addEventListener('click', () => {
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        isOpen ? closeMenu() : openMenu();
+    });
+
+    // Cerrar al hacer click en overlay
+    overlay?.addEventListener('click', closeMenu);
+
+    // Cerrar al hacer click en un link
+    menu?.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+    });
+</script>

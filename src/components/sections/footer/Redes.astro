@@ -1,0 +1,117 @@
+---
+import Facebook  from "@images/Facebook.webp"
+import Be        from "@images/Be.webp"
+import X         from "@images/X.webp"
+import Instagram from "@images/Instagram.webp"
+import TikTok    from "@images/Tiktok.webp"
+import Linkedin  from "@images/Linkedin.webp"
+import Capa      from "@images/manitoslyfox2.png"
+import { Image } from "astro:assets";
+
+// href vacío = red aún no configurada → se muestra deshabilitada
+export const redes = [
+  { src: Facebook,  alt: "Facebook",  title: "Facebook",  href: "" },
+  { src: Be,        alt: "Behance",   title: "Behance",   href: "" },
+  { src: X,         alt: "X / Twitter", title: "X",       href: "" },
+  { src: Instagram, alt: "Instagram", title: "Instagram", href: "" },
+  { src: TikTok,    alt: "TikTok",    title: "TikTok",   href: "" },
+  { src: Linkedin,  alt: "LinkedIn",  title: "LinkedIn",  href: "" },
+]
+---
+
+<div class="flex flex-col items-center gap-3">
+  <!-- Avatar fox -->
+  <div class="manito-wrap">
+    <Image src={Capa} alt="Logo Slyfox" class="manito-img" />
+  </div>
+
+  <!-- Íconos de redes -->
+  <div class="flex gap-2 sm:gap-3 flex-wrap justify-center">
+    {redes.map((red) =>
+      red.href ? (
+        /* Red con URL real → link activo */
+        <a
+          href={red.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={red.title}
+          class="social-icon"
+        >
+          <Image
+            src={red.src}
+            alt={red.alt}
+            class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 xl:w-9 xl:h-9 object-contain"
+          />
+        </a>
+      ) : (
+        /* Sin URL → deshabilitado visualmente */
+        <span
+          aria-label={`${red.title} — próximamente`}
+          title="Próximamente"
+          class="social-icon social-icon--disabled"
+        >
+          <Image
+            src={red.src}
+            alt=""
+            aria-hidden="true"
+            class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 xl:w-9 xl:h-9 object-contain"
+          />
+        </span>
+      )
+    )}
+  </div>
+
+  <p class="text-[10px] sm:text-xs text-[#86868B] font-inter">Próximamente en redes</p>
+</div>
+
+<style>
+  /* Círculo amarillo — la mano sale desde abajo */
+  .manito-wrap {
+    width: 90px;
+    height: 90px;
+    background: #FBBC05;
+    border-radius: 50%;
+    overflow: hidden;        /* corta lo que sale por abajo */
+    position: relative;
+  }
+  .manito-img {
+    width: 130px;
+    height: 144px;
+    object-fit: contain;
+    position: absolute;
+    bottom: -38px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: 1024px) {
+    .manito-wrap { width: 112px; height: 112px; }
+    .manito-img  { width: 158px; height: 174px; bottom: -46px; }
+  }
+  @media (min-width: 1280px) {
+    .manito-wrap { width: 128px; height: 128px; }
+    .manito-img  { width: 180px; height: 198px; bottom: -54px; }
+  }
+
+  .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 4px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  /* Activo */
+  a.social-icon:hover {
+    opacity: 0.75;
+    transform: translateY(-2px);
+  }
+
+  /* Deshabilitado */
+  .social-icon--disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    filter: grayscale(1);
+  }
+</style>

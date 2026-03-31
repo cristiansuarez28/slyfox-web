@@ -1,0 +1,40 @@
+---
+import Image from "astro/components/Image.astro"
+import corazon from "@images/corazon.png"
+import Conocenos from "@components/Shared/buttonConocenos.astro"
+---
+
+<section class="bg-[#fbfbfb] dark:bg-[#000000] w-full flex justify-center py-12 md:py-20 lg:py-28 xl:py-36">
+    <div class="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 flex flex-col items-center justify-center gap-6 md:gap-8 lg:gap-10">
+
+        <!-- Texto principal -->
+        <div class="text-center font-bold font-inter w-[90%] max-w-[1100px]">
+            <p class="dark:text-[#F5F5F7] text-[#31323D] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl leading-tight">
+                Lo que nos <span class="text-[#FF7070]">diferencia</span> es que lo<br /><span class="text-[#FF7070]">hacemos</span> con <span class="text-[#FF7070]">amor</span>
+            </p>
+        </div>
+
+        <!-- Corazón -->
+        <Image
+            src={corazon}
+            alt="corazon"
+            class="heart object-contain w-8 sm:w-10 md:w-14 lg:w-16 xl:w-20"
+        />
+
+        <!-- CTA — crece progresivamente, nunca encoge -->
+        <Conocenos className="rounded-full font-inter w-32 h-9 text-sm sm:w-40 sm:h-10 sm:text-base md:w-44 md:h-11 md:text-base lg:w-48 lg:h-12 lg:text-lg xl:w-52 xl:h-12 xl:text-lg text-[#F5F5F7] bg-[#5137F0]" />
+    </div>
+</section>
+
+<style>
+.heart {
+    animation: heartbeat 1s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25%       { transform: scale(1.2); }
+    50%       { transform: scale(1); }
+    75%       { transform: scale(1.2); }
+}
+</style>

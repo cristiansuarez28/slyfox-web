@@ -1,0 +1,134 @@
+---
+import Logo from "@components/Shared/Logo.astro";
+import Image from "astro/components/Image.astro";
+import Probeta from "@images/Probeta.webp"
+import Mandarina from "@images/mandarina.webp";
+import Patilla from "@images/patilla.webp";
+import Bomba from "@images/bomba.webp";
+import Uvas from "@images/uvas.webp";
+import Hongo from "@images/hongo.webp";
+import ProbetaRoja from "@images/probetaroja.webp";
+import Rayo from "@images/rayo.webp";
+---
+
+<section
+  class="w-full min-h-[320px] flex justify-center bg-[#F5F6FA] dark:bg-[#0D0D0D]
+         sm:min-h-[400px] md:min-h-[480px] lg:min-h-[700px] xl:min-h-[800px]"
+  aria-labelledby="hero-heading"
+>
+  <div
+    class="relative flex flex-col items-center justify-center text-center
+           px-4 sm:px-12 lg:px-20 xl:px-32 2xl:px-48
+           py-10 sm:py-14 lg:py-20 2xl:py-24
+           w-full max-w-[1400px]"
+  >
+    <Logo className="w-[90px] sm:w-[120px] md:w-[130px] lg:w-[170px] xl:w-[230px] 2xl:w-[220px]" />
+
+    <!-- Imágenes decorativas — role="presentation" las excluye de lectores de pantalla -->
+    <div class="hidden box_fruit absolute md:block md:top-10 md:left-45 lg:top-25 lg:left-60 xl:top-18 xl:left-75 2xl:top-20 2xl:left-125" role="presentation" aria-hidden="true">
+      <Image src={Probeta} alt="" class="fruit md:w-[25px] lg:w-[35px] xl:w-[45px] 2xl:w-[50px]" />
+    </div>
+    <div class="hidden box_fruit absolute md:block md:top-25 md:left-135 lg:top-45 lg:left-185 xl:top-35 xl:left-250 2xl:top-40 2xl:left-325" role="presentation" aria-hidden="true">
+      <Image src={Mandarina} alt="" class="fruit md:w-[35px] lg:w-[45px] xl:w-[55px] 2xl:w-[65px]" />
+    </div>
+    <div class="hidden box_fruit absolute md:block md:top-53 md:left-30 md:rotate-180 lg:top-100 lg:left-25 xl:top-90 xl:left-45 2xl:top-90 2xl:left-90" role="presentation" aria-hidden="true">
+      <Image src={Patilla} alt="" class="fruit md:w-[25px] lg:w-[35px] xl:w-[45px] 2xl:w-[50px]" />
+    </div>
+    <div class="hidden box_fruit absolute md:block md:top-30 md:left-8 md:rotate-250 lg:top-60 2xl:top-60 2xl:left-25" role="presentation" aria-hidden="true">
+      <Image src={Bomba} alt="" class="fruit md:w-[45px] lg:w-[55px] xl:w-[65px] 2xl:w-[75px]" />
+    </div>
+    <div class="hidden box_fruit absolute md:block md:top-12 md:left-170 md:rotate-45 lg:top-27 lg:left-220 xl:top-15 xl:left-320 2xl:top-20 2xl:left-400" role="presentation" aria-hidden="true">
+      <Image src={Uvas} alt="" class="fruit md:w-[25px] lg:w-[35px] xl:w-[45px] 2xl:w-[50px]" />
+    </div>
+    <div class="hidden box_fruit absolute md:block md:top-100 md:left-17 lg:top-170 xl:top-175 xl:left-20 2xl:top-160 2xl:left-45" role="presentation" aria-hidden="true">
+      <Image src={Hongo} alt="" class="fruit md:w-[35px] lg:w-[45px] xl:w-[55px] 2xl:w-[60px]" />
+    </div>
+    <div class="hidden box_fruit absolute md:block md:top-105 md:left-90 lg:top-180 lg:left-120 xl:top-182 xl:left-160 2xl:top-180 2xl:left-220" role="presentation" aria-hidden="true">
+      <Image src={ProbetaRoja} alt="" class="fruit md:w-[30px] lg:w-[40px] xl:w-[50px] 2xl:w-[50px]" />
+    </div>
+    <div class="hidden box_fruit absolute md:block md:top-85 md:left-180 md:rotate-45 lg:top-140 lg:left-240 xl:top-145 xl:left-340 2xl:top-130 2xl:left-420" role="presentation" aria-hidden="true">
+      <Image src={Rayo} alt="" class="fruit md:w-[25px] lg:w-[35px] 2xl:w-[40px]" />
+    </div>
+
+    <h1
+      id="hero-heading"
+      class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl
+             text-[#31323D] dark:text-[#F5F5F7]
+             font-extrabold font-inter
+             mt-6 sm:mt-12 md:mt-16 lg:mt-24 xl:mt-28
+             mb-3 sm:mb-6 md:mb-8 xl:mb-12
+             leading-tight"
+    >
+      Transformamos Ideas<br />en Experiencia<span
+        class="text-[#FF7070] inline-block title-dot">.</span>
+    </h1>
+
+    <!-- Subtítulo mobile / tablet -->
+    <p
+      class="text-base sm:text-lg md:text-xl font-bold text-[#36455d] dark:text-[#86868B] lg:hidden max-w-[600px]"
+    >
+      Construimos software a la medida que impulsa tu negocio: apps web, móviles y sistemas que escalan contigo.
+    </p>
+
+    <!-- Subtítulo desktop -->
+    <p
+      class="hidden lg:block lg:text-[15px] xl:text-[18px] font-bold text-[#131b27] dark:text-[#86868B] w-[75%] max-w-[900px] leading-relaxed"
+    >
+      Convertimos las necesidades de tu negocio en software que funciona, escala y genera resultados. Aplicaciones web, móviles y sistemas empresariales construidos con código limpio, diseño de alto impacto y visibilidad en buscadores.
+    </p>
+  </div>
+</section>
+
+<style>
+  .title-dot.animate {
+    animation: enterdot 1s cubic-bezier(0, 0.9, 0.12, -0.06) both;
+  }
+
+  .fruit {
+    animation: rotate-fruit 100s infinite linear both alternate;
+  }
+
+  .box_fruit {
+    z-index: 10;
+    position: absolute;
+    will-change: transform;
+    animation: move-fruit 20s infinite linear both alternate;
+  }
+
+  @keyframes move-fruit {
+    100% { transform: translate(-100px, -100px); }
+  }
+
+  @keyframes rotate-fruit {
+    100% { transform: rotate(-720deg); }
+  }
+
+  @keyframes enterdot {
+    0%   { transform: translateY(-100vh); }
+    40%  { transform: translateY(0); }
+    50%  { transform: translateY(-30px); }
+    60%  { transform: translateY(15px); }
+    70%  { transform: translateY(-10px); }
+    80%  { transform: translateY(5px); }
+    90%  { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const titleDot = document.querySelector('.title-dot');
+    if (!titleDot) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    observer.observe(titleDot);
+  });
+</script>

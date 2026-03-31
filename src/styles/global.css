@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+html {
+    scroll-behavior: smooth;
+}
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   FUENTES SELF-HOSTED — font-display: swap evita FOIT
+   (Flash of Invisible Text mientras carga la fuente)
+   ============================================================ */
+
+@font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi-Bold.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi-Black.otf") format("opentype");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ============================================================
+   TEMA — tokens globales de diseño
+   Usar estos tokens en código nuevo en lugar de valores hardcodeados.
+   Ejemplo: text-primary en vez de text-[#5137F0]
+   ============================================================ */
+
+@theme {
+    /* Tipografías */
+    --font-inter:   "Inter",    ui-sans-serif, system-ui, sans-serif;
+    --font-satoshi: "Satoshi",  ui-sans-serif, system-ui, sans-serif;
+    --font-segoe:   "Segoe UI", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+
+    /* Colores de marca — disponibles como clases Tailwind:
+       text-primary, bg-primary, border-primary, etc. */
+    --color-primary:   #5137F0; /* Púrpura principal — CTAs, links, foco */
+    --color-accent:    #FF7070; /* Coral — etiquetas, puntos decorativos  */
+    --color-text:      #31323D; /* Texto principal (light mode)           */
+    --color-text-soft: #86868B; /* Texto secundario / subtítulos          */
+    --color-surface:   #F5F6FA; /* Superficie de cards (light mode)       */
+    --color-wa:        #25D366; /* Verde WhatsApp                         */
+
+    /* Animaciones */
+    --animate-rotate: rotate 6s linear infinite;
+
+    @keyframes rotate {
+        to { transform: rotate(360deg); }
+    }
+}
+
+/* ============================================================
+   TRANSICIÓN DARK MODE — estilo Apple
+   Solo transicionamos propiedades de color. Transforms y opacity
+   quedan intactos para no afectar animaciones (frutas, estrellas, etc.)
+   La clase .theme-transitioning se aplica brevemente via JS solo
+   durante el cambio de tema, luego se elimina.
+   ============================================================ */
+
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+    transition-property: background-color, color, border-color, fill, stroke !important;
+    transition-duration: 0.4s !important;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ============================================================
+   ACCESIBILIDAD — respeta preferencia de movimiento reducido
+   Usuarios con vértigo, epilepsia o sensibilidad al movimiento
+   activan esta preferencia en su sistema operativo.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   ESCALA ADAPTATIVA — pantallas muy grandes (49", 4K, etc.)
+   Reduce el font-size base un ~10% a partir de 1800px para que
+   la tipografía no se vea sobredimensionada en monitores gigantes.
+   Todos los valores rem de Tailwind escalan proporcionalmente.
+   ============================================================ */
+
+@media (min-width: 1800px) {
+    html {
+        font-size: 93%;
+    }
+}
+
+@media (min-width: 2400px) {
+    html {
+        font-size: 87%;
+    }
+}
+
+/* ============================================================
+   RITMO DE SECCIONES — Apple-style breathing room
+   Cada sección es un capítulo. El espacio crea jerarquía visual
+   sin necesidad de bordes ni separadores duros.
+   clamp(mínimo, fluido, máximo): escala suave con el viewport.
+   ============================================================ */
+
+section {
+    padding-block: clamp(56px, 8vw, 128px);
+}
+
+/* ============================================================
+   ACCESIBILIDAD — foco visible para navegación por teclado
+   ============================================================ */
+
+:focus-visible {
+    outline: 2px solid #5137F0;
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    /* Ocultar visualmente pero accesible para lectores de pantalla */
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+
+    .not-sr-only {
+        position: static;
+        width: auto;
+        height: auto;
+        padding: 0;
+        margin: 0;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+    }
+}

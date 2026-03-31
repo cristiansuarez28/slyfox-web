@@ -1,0 +1,227 @@
+---
+import { tarjetas } from '@data/cards';
+import { Image } from 'astro:assets';
+
+// Logo-matched — mismo esquema que CardsDesk/ServicePanel
+const badgeStyle = [
+  { color: '#FF6B6B', lightColor: '#D94040', bg: 'rgba(255,107,107,0.10)' }, // Software — coral
+  { color: '#C5F135', lightColor: '#15803D', bg: 'rgba(197,241,53,0.10)'  }, // Canales  — lima
+  { color: '#00E5AA', lightColor: '#007A5E', bg: 'rgba(0,229,170,0.10)'   }, // Digital  — cyan
+  { color: '#7C6FF5', lightColor: '#5A4ED4', bg: 'rgba(124,111,245,0.10)' }, // UI/UX    — violeta
+  { color: '#F43F62', lightColor: '#C01A3E', bg: 'rgba(244,63,98,0.10)'   }, // Security — rosa
+];
+---
+
+<section class="w-full bg-[#fbfbfb] dark:bg-[#000000] md:hidden py-8 px-4">
+
+  <!-- Encabezado de sección -->
+  <p class="text-[#86868B] font-inter font-semibold text-[10px] uppercase tracking-widest mb-2 px-1">
+    Nuestros servicios
+  </p>
+  <h2 class="text-[#1E1E1E] dark:text-[#ffffffeb] font-inter font-bold text-xl sm:text-2xl mb-1 px-1 leading-tight">
+    Tecnología que entra en tu negocio<br />y se nota en los resultados.
+  </h2>
+  <p class="text-[#86868B] font-inter text-sm mb-5 px-1 leading-relaxed">
+    Diseñamos, construimos e integramos soluciones para empresas que necesitan un aliado técnico.
+  </p>
+
+  <!-- Track del carrusel -->
+  <div class="mob-carousel" id="mob-carousel">
+    {tarjetas.map((tarjeta, i) => (
+      <div class="mob-slide px-1">
+        <div
+          class="svc-card-wrap bg-[#F5F6FA] dark:bg-[#161616] rounded-2xl p-5 flex flex-col min-h-[400px] sm:min-h-[360px]"
+          data-index={i}
+          style={`--card-color: ${badgeStyle[i].color}; --card-color-light: ${badgeStyle[i].lightColor};`}
+        >
+          <!-- Badge -->
+          <span
+            class="mob-badge"
+            style={`background: ${badgeStyle[i].bg};`}
+          >
+            {tarjeta.badge}
+          </span>
+
+          <!-- Ícono -->
+          <div class="flex justify-center my-4">
+            <Image
+              src={tarjeta.src}
+              alt={tarjeta.titulo}
+              class="w-20 h-20 sm:w-18 sm:h-18 object-contain"
+            />
+          </div>
+
+          <!-- Título -->
+          <h3 class="text-[#1E1E1E] dark:text-[#ffffffeb] font-inter font-bold text-[17px] sm:text-xl mb-2 leading-snug">
+            {tarjeta.titulo}
+          </h3>
+
+          <!-- Descripción -->
+          <p class="text-[#86868b] dark:text-[#86868B] font-inter font-semibold text-sm leading-relaxed mb-3">
+            {tarjeta.descripcion}
+          </p>
+
+          <!-- Bullets -->
+          <ul class="list-disc pl-5 space-y-1.5">
+            {tarjeta.items.map(item => (
+              <li class="text-[#86868b] dark:text-[#86868B] font-inter text-sm">{item}</li>
+            ))}
+          </ul>
+
+          <!-- CTA — abre el side panel -->
+          <button
+            class="svc-open mob-cta mt-auto pt-4"
+            data-index={i}
+            aria-label={`Ver detalle: ${tarjeta.titulo}`}
+          >
+            {tarjeta.ctaCard}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" width="13" height="13" aria-hidden="true">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Controles: flechas + dots -->
+  <div class="flex items-center justify-center gap-4 mt-5">
+    <button
+      id="mob-prev"
+      aria-label="Tarjeta anterior"
+      class="flex items-center justify-center w-9 h-9 bg-[#333336] text-white rounded-full text-sm shrink-0"
+    >❮</button>
+
+    <div class="flex items-center gap-2" id="mob-dots">
+      {tarjetas.map((_, i) => (
+        <button
+          class="mob-dot transition-all duration-250 rounded-full bg-[#333336]"
+          data-index={i}
+          aria-label={`Ver tarjeta ${i + 1}`}
+        />
+      ))}
+    </div>
+
+    <button
+      id="mob-next"
+      aria-label="Tarjeta siguiente"
+      class="flex items-center justify-center w-9 h-9 bg-[#333336] text-white rounded-full text-sm shrink-0"
+    >❯</button>
+  </div>
+</section>
+
+<style>
+  /* Carrusel con scroll-snap nativo */
+  .mob-carousel {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  .mob-carousel::-webkit-scrollbar { display: none; }
+
+  .mob-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+
+  .mob-dot { width: 8px; height: 8px; }
+  .mob-dot.active { width: 20px; background-color: #5137F0; }
+
+  /* Badge — light: versión con contraste | dark: vibrante */
+  .mob-badge {
+    display: inline-block;
+    font-family: var(--font-inter);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--card-color-light);
+  }
+  :global(.dark) .mob-badge {
+    color: var(--card-color);
+  }
+
+  /* Canales (lima) → esmeralda en light mode */
+  html:not(.dark) .svc-card-wrap[data-index="1"] img {
+    filter: hue-rotate(68deg) saturate(0.83) brightness(0.5);
+  }
+
+  /* CTA button en mobile */
+  .mob-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 9px;
+    background: transparent;
+    font-family: var(--font-inter);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--card-color-light);
+    cursor: pointer;
+    border-color: color-mix(in srgb, var(--card-color-light) 35%, transparent);
+    transition: background 0.18s, color 0.18s;
+  }
+  :global(.dark) .mob-cta {
+    color: var(--card-color);
+    border-color: color-mix(in srgb, var(--card-color) 35%, transparent);
+  }
+  .mob-cta:active {
+    background: color-mix(in srgb, var(--card-color-light) 8%, transparent);
+  }
+  :global(.dark) .mob-cta:active {
+    background: color-mix(in srgb, var(--card-color) 8%, transparent);
+  }
+</style>
+
+<script>
+  const carousel = document.getElementById('mob-carousel') as HTMLElement;
+  const dots     = document.querySelectorAll<HTMLElement>('.mob-dot');
+  const prev     = document.getElementById('mob-prev');
+  const next     = document.getElementById('mob-next');
+  const total    = dots.length;
+  let current    = 0;
+
+  function slideW() { return carousel.offsetWidth; }
+
+  function goTo(index: number) {
+    current = Math.max(0, Math.min(index, total - 1));
+    carousel.scrollTo({ left: current * slideW(), behavior: 'smooth' });
+    dots.forEach((d, i) => {
+      const isActive = i === current;
+      d.classList.toggle('active', isActive);
+      d.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
+  goTo(0);
+
+  prev?.addEventListener('click', () => goTo(current - 1));
+  next?.addEventListener('click', () => goTo(current + 1));
+  dots.forEach(d => {
+    d.addEventListener('click', () => goTo(parseInt(d.dataset.index ?? '0', 10)));
+  });
+
+  // Sincronizar dots cuando el usuario arrastra con el dedo
+  carousel.addEventListener('scroll', () => {
+    const idx = Math.round(carousel.scrollLeft / slideW());
+    if (idx !== current) {
+      current = idx;
+      dots.forEach((d, i) => {
+        const isActive = i === current;
+        d.classList.toggle('active', isActive);
+        d.setAttribute('aria-pressed', String(isActive));
+      });
+    }
+  }, { passive: true });
+</script>

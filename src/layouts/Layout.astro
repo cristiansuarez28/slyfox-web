@@ -1,0 +1,127 @@
+---
+import NavBar from "@components/sections/nav/Navbar.astro"
+import SEO from "@components/SEO.astro"
+import ModalConocenos from "@components/Shared/ModalConocenos.astro"
+import ServicePanel from "@components/Shared/ServicePanel.astro"
+import WhatsappWidget from "@components/Shared/WhatsappWidget.astro"
+import "@styles/global.css"
+
+const canonicalURL = new URL(Astro.url.pathname, 'https://slyfox.com.co').toString();
+
+const defaultSEO = {
+  title: 'Slyfox - Soluciones Digitales Innovadoras',
+  description: 'Desarrollamos soluciones digitales a medida para impulsar tu negocio al siguiente nivel con tecnología de punta y diseño excepcional.',
+  image: '/images/og-image.jpg',
+  url: canonicalURL,
+  type: 'website'
+};
+
+const seoConfig = {
+  ...defaultSEO,
+  ...Astro.props.seo || {}
+};
+---
+
+<!doctype html>
+<html lang="es" id="main-container">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Inter — Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Inicialización crítica: scroll + tema (is:inline = corre antes del primer paint) -->
+    <script is:inline>
+      // Prevenir scroll restoration automático del browser
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      // Limpiar hash para evitar auto-scroll a anclas al refrescar
+      if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+      // Garantizar posición inicial en el top
+      window.addEventListener('load', function () { window.scrollTo(0, 0); });
+      // Anti-flash de tema: aplica dark/light ANTES de que el browser pinte
+      (function () {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.toggle('dark', saved ? saved === 'dark' : prefersDark);
+      })();
+    </script>
+
+    <!-- Theme toggle — ES module procesado por Astro (TypeScript, deduplicado) -->
+    <script>
+      function applyTheme(isDark: boolean) {
+        const html = document.documentElement;
+        html.classList.add('theme-transitioning');
+        html.classList.toggle('dark', isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        setTimeout(() => html.classList.remove('theme-transitioning'), 420);
+      }
+
+      document.querySelectorAll('.theme-toggle').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          applyTheme(!document.documentElement.classList.contains('dark'));
+        });
+      });
+    </script>
+
+    <SEO {...seoConfig} />
+
+    <!-- Preload fuente crítica -->
+    <link rel="preload" href="/fonts/Satoshi-Bold.otf" as="font" type="font/otf" crossorigin="anonymous" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#5137F0" />
+
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Slyfox S.A.S",
+        "url": "https://slyfox.com.co",
+        "logo": "https://slyfox.com.co/favicon.svg",
+        "description": "Desarrollamos soluciones digitales a medida: aplicaciones web, móviles, diseño UX/UI y software a la medida en Colombia.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "CO",
+          "addressRegion": "Colombia"
+        }
+      }
+    </script>
+
+    <!-- Schema.org WebSite -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Slyfox",
+        "url": "https://slyfox.com.co"
+      }
+    </script>
+  </head>
+
+  <body class="bg-[#fbfbfb] dark:bg-[#000000]">
+    <!-- Skip to main content — accesibilidad teclado -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-[#5137F0] focus:text-white focus:rounded-md focus:font-bold"
+    >
+      Saltar al contenido principal
+    </a>
+
+    <NavBar />
+    <ModalConocenos />
+    <ServicePanel />
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <WhatsappWidget />
+  </body>
+</html>

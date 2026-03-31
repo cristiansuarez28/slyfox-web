@@ -1,0 +1,81 @@
+---
+import { Image } from "astro:assets";
+import Image170 from "@images/image170.png"
+import Image171 from "@images/image171.png"
+import Image172 from "@images/image172.png"
+import Image169 from "@images/image169.png"
+import Image173 from "@images/image173.png"
+import Image174 from "@images/image174.png"
+
+const imagenes = [
+    { src: Image170 , alt:"Image170", title: "Image170",  },
+    { src: Image171 , alt:"Image171", title: "Image171", },
+    { src: Image172 , alt:"Image172", title: "Image172", },
+    { src: Image169 , alt:"Image169", title: "Image169", },
+    { src: Image173 , alt:"Image173", title: "Image173", },
+    { src: Image174 , alt:"Image174", title: "Image174", },
+
+]
+---
+<div
+    id="phones"
+    class="max-w-[1400px] m-auto phones grid grid-cols-6 w-full bg-[#fbfbfb] dark:bg-[#000000] gap-3 sm:gap-4
+           px-4 pt-2 pb-6 sm:px-6 sm:pt-2 sm:pb-8 lg:px-10 lg:pt-2 lg:pb-10 xl:px-16 xl:pt-4 xl:pb-12 2xl:px-20 2xl:pt-4 2xl:pb-14"
+>
+    {imagenes.map((imagen, index)=>(
+        <Image 
+            src={imagen.src} 
+            alt={`imagen ${index + 1}`}
+            class = "phone"
+        />
+    ))}
+</div>
+
+<style>
+
+    .phone {
+        opacity: 0;
+        transform: translateY(100px);
+        transition: opacity 2s ease, transform 0.5s ease;
+    }
+
+    .phone.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Aplicar delays individuales */
+    .phone.visible:nth-child(1) { transition-delay: 0.2s; }
+    .phone.visible:nth-child(2) { transition-delay: 0.4s; }
+    .phone.visible:nth-child(3) { transition-delay: 0.6s; }
+    .phone.visible:nth-child(4) { transition-delay: 0.8s; }
+    .phone.visible:nth-child(5) { transition-delay: 1s; }
+    .phone.visible:nth-child(6) { transition-delay: 1.2s; }
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const phonesContainer = document.getElementById('phones');
+        const phones = document.querySelectorAll('.phone');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    // Agregar la clase 'visible' a cada estrella con un pequeño retraso
+                    phones.forEach((phone, index) => {
+                        setTimeout(() => {
+                            phone.classList.add('visible');
+                        }, index * 200); // 200ms de retraso entre cada estrella
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.7
+        });
+
+        if (phonesContainer) {
+            observer.observe(phonesContainer);
+        }
+    });
+</script>

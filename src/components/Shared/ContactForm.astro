@@ -1,0 +1,241 @@
+---
+/**
+ * ContactForm — formulario de contacto reutilizable.
+ *
+ * Usado en:
+ *   - ModalConocenos.astro  (variant="modal")
+ *   - Contact.astro         (variant="section")
+ *
+ * El variant "section" activa los estilos dark mode.
+ */
+interface Props {
+  variant?: 'modal' | 'section';
+  /** IDs únicos para los campos (evita colisiones cuando ambas instancias coexisten en el DOM) */
+  prefix?: string;
+}
+
+const { variant = 'modal', prefix = 'cf' } = Astro.props;
+const isDark = variant === 'section';
+---
+
+<form class={`cf-form${isDark ? ' cf-form--dark' : ''}`} novalidate data-contact-form>
+
+  <div class="cf-field">
+    <label class="cf-label" for={`${prefix}-nombre`}>
+      Nombre <span class="cf-req">*</span>
+    </label>
+    <input
+      id={`${prefix}-nombre`}
+      type="text"
+      placeholder="Escribe tu nombre o apodo…"
+      class="cf-input"
+      autocomplete="name"
+      required
+    />
+  </div>
+
+  <div class="cf-field">
+    <label class="cf-label" for={`${prefix}-correo`}>
+      Correo <span class="cf-req">*</span>
+    </label>
+    <input
+      id={`${prefix}-correo`}
+      type="email"
+      placeholder="@tuempresa.com"
+      class="cf-input"
+      autocomplete="email"
+      required
+    />
+  </div>
+
+  <div class="cf-field">
+    <label class="cf-label" for={`${prefix}-tel`}>
+      Teléfono <span class="cf-optional">(opcional)</span>
+    </label>
+    <input
+      id={`${prefix}-tel`}
+      type="tel"
+      placeholder="301 xxx - xxx - xxx"
+      class="cf-input"
+      autocomplete="tel"
+    />
+  </div>
+
+  <div class="cf-field">
+    <label class="cf-label" for={`${prefix}-msg`}>¿Cómo podemos ayudarte?</label>
+    <textarea
+      id={`${prefix}-msg`}
+      rows="3"
+      placeholder="¿Quieres que hagamos realidad tus ideas? Cuéntanos sobre tu negocio aquí."
+      class="cf-input cf-textarea"
+    ></textarea>
+  </div>
+
+  <div class="cf-field">
+    <p class="cf-label">¿Cuál de nuestros servicios te interesa?</p>
+    <div class="cf-checks">
+      <label class="cf-check"><input type="checkbox" class="cf-checkbox" /><span>Consultoría TI</span></label>
+      <label class="cf-check"><input type="checkbox" class="cf-checkbox" /><span>Diseño UX/UI</span></label>
+      <label class="cf-check"><input type="checkbox" class="cf-checkbox" /><span>Desarrollo de software a la medida</span></label>
+    </div>
+  </div>
+
+  <!-- Estado de envío -->
+  <p class="cf-feedback" aria-live="polite"></p>
+
+  <button type="submit" class="cf-submit">Enviar</button>
+
+</form>
+
+<style>
+.cf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cf-label {
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1E1E1E;
+}
+
+.cf-form--dark .cf-label { color: #F5F5F7; }
+
+.cf-req { color: #FF7070; }
+.cf-optional { color: #86868B; font-weight: 400; font-size: 0.8rem; }
+
+.cf-input {
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+  color: #1E1E1E;
+  background: #F5F6FA;
+  border: 1.5px solid #e5e5ea;
+  border-radius: 10px;
+  padding: 10px 14px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.cf-input::placeholder { color: #aaa; font-size: 0.85rem; }
+.cf-input:focus { border-color: #5137F0; }
+
+.cf-form--dark .cf-input {
+  background: #111;
+  border-color: #2a2a2a;
+  color: #F5F5F7;
+}
+
+.cf-textarea {
+  resize: none;
+  min-height: 88px;
+}
+
+/* Checkboxes */
+.cf-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 4px;
+}
+
+.cf-check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  color: #1E1E1E;
+  cursor: pointer;
+}
+
+.cf-form--dark .cf-check { color: #F5F5F7; }
+
+.cf-checkbox {
+  width: 15px;
+  height: 15px;
+  accent-color: #5137F0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Feedback de envío */
+.cf-feedback {
+  font-family: var(--font-inter);
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  color: #25D366;
+}
+.cf-feedback.error { color: #FF7070; }
+
+/* Botón submit */
+.cf-submit {
+  font-family: var(--font-inter);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: #5137F0;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s, transform 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.cf-submit:hover  { background: #3f28d4; transform: scale(1.02); }
+.cf-submit:active { transform: scale(0.99); }
+</style>
+
+<script>
+  /**
+   * Manejo básico del envío: valida campos requeridos y muestra
+   * feedback al usuario. Conectar al backend real reemplazando
+   * el bloque marcado con TODO.
+   */
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const feedback = form.querySelector<HTMLElement>('.cf-feedback');
+    const submit   = form.querySelector<HTMLButtonElement>('.cf-submit');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nombre = (form.querySelector('input[type="text"]') as HTMLInputElement)?.value.trim();
+      const correo = (form.querySelector('input[type="email"]') as HTMLInputElement)?.value.trim();
+
+      if (!nombre || !correo) {
+        if (feedback) {
+          feedback.textContent = 'Por favor completa los campos requeridos.';
+          feedback.className = 'cf-feedback error';
+        }
+        return;
+      }
+
+      if (submit) submit.disabled = true;
+      if (feedback) { feedback.textContent = 'Enviando…'; feedback.className = 'cf-feedback'; }
+
+      try {
+        // TODO: reemplazar con el endpoint real cuando esté listo
+        // await fetch('/api/contact', { method: 'POST', body: new FormData(form) });
+        await new Promise((r) => setTimeout(r, 800)); // simulación temporal
+
+        if (feedback) { feedback.textContent = '¡Mensaje enviado! Te contactaremos pronto. 🦊'; feedback.className = 'cf-feedback'; }
+        form.reset();
+      } catch {
+        if (feedback) { feedback.textContent = 'Ocurrió un error. Intenta de nuevo.'; feedback.className = 'cf-feedback error'; }
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  });
+</script>

@@ -1,0 +1,266 @@
+---
+import { tarjetas } from '@data/cards';
+import { Image } from 'astro:assets';
+
+// Colores logo-matched. color = dark mode (vibrante) | lightColor = light mode (contraste)
+const badgeStyle = [
+  { color: '#FF6B6B', lightColor: '#D94040', bg: 'rgba(255,107,107,0.10)' }, // Software — coral
+  { color: '#C5F135', lightColor: '#15803D', bg: 'rgba(197,241,53,0.10)'  }, // Canales  — lima
+  { color: '#00E5AA', lightColor: '#007A5E', bg: 'rgba(0,229,170,0.10)'   }, // Digital  — cyan
+  { color: '#7C6FF5', lightColor: '#5A4ED4', bg: 'rgba(124,111,245,0.10)' }, // UI/UX    — violeta
+  { color: '#F43F62', lightColor: '#C01A3E', bg: 'rgba(244,63,98,0.10)'   }, // Security — rosa
+];
+---
+
+<section class="hidden md:block w-full bg-[#fbfbfb] dark:bg-[#000000] mt-8 lg:mt-10 xl:mt-14">
+  <div class="max-w-[1400px] mx-auto">
+
+    <!-- Encabezado de sección -->
+    <div class="px-4 sm:px-6 md:px-8 lg:px-10 py-3 mb-2">
+      <p class="text-[#86868B] font-inter font-semibold text-[11px] uppercase tracking-widest mb-2">
+        Nuestros servicios
+      </p>
+      <h2 class="text-[#1E1E1E] dark:text-[#ffffffeb] font-inter font-bold
+                 text-xl md:text-2xl lg:text-3xl xl:text-4xl leading-tight max-w-2xl">
+        Tecnología que entra en tu negocio<br class="hidden lg:block" />
+        y se nota en los resultados.
+      </h2>
+      <p class="text-[#86868B] font-inter text-sm lg:text-base mt-3 max-w-xl leading-relaxed">
+        Diseñamos, construimos e integramos soluciones para empresas que necesitan
+        un aliado técnico que entienda su negocio.
+      </p>
+    </div>
+
+    <!-- Grid de cards (5 columnas, scroll en md-lg) -->
+    <div
+      id="desk-carousel"
+      class="bg-[#fbfbfb] dark:bg-[#000000] parent overflow-auto no-scrollbar snap-x
+             px-4 sm:px-6 md:px-8 lg:px-10 pb-4 lg:overflow-hidden"
+    >
+      {tarjetas.map((tarjeta, i) => (
+        <div
+          class="svc-card-wrap snap-center min-w-0"
+          data-index={i}
+          style={`--card-color: ${badgeStyle[i].color}; --card-color-light: ${badgeStyle[i].lightColor};`}
+        >
+          <!-- Badge -->
+          <span
+            class="badge-chip"
+            style={`background: ${badgeStyle[i].bg};`}
+          >
+            {tarjeta.badge}
+          </span>
+
+          <!-- Ícono -->
+          <div class="bg-[#f5f6f9] dark:bg-[#0D0D0D] icon-box
+                      h-[220px] md:h-[260px] lg:h-[280px] xl:h-[320px] 2xl:h-[360px]">
+            <Image src={tarjeta.src} alt={tarjeta.titulo} class="w-20 md:w-22 xl:w-26" />
+          </div>
+
+          <!-- Título -->
+          <h3 class="card-title text-[#1E1E1E] dark:text-[#ffffffeb] font-inter font-bold
+                     mt-3 text-[15px] lg:text-[15px] xl:text-[17px] leading-snug">
+            {tarjeta.titulo}
+          </h3>
+
+          <!-- Descripción -->
+          <p class="text-[#86868b] dark:text-[#86868B] font-inter font-semibold text-left
+                    text-[13px] lg:text-[12px] xl:text-[13px] mt-1.5 mb-3 leading-relaxed">
+            {tarjeta.descripcion}
+          </p>
+
+          <!-- Bullets -->
+          <ul class="list-disc pl-4 space-y-1.5">
+            {tarjeta.items.map(item => (
+              <li class="text-[#86868b] dark:text-[#86868B] font-inter
+                         text-[13px] lg:text-[12px] xl:text-[13px] leading-snug">
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <!-- CTA — abre el side panel -->
+          <button
+            class="svc-open card-cta"
+            data-index={i}
+            aria-label={`Ver detalle: ${tarjeta.titulo}`}
+          >
+            {tarjeta.ctaCard}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" width="12" height="12" aria-hidden="true"
+              class="arrow-icon">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+      ))}
+    </div>
+
+    <!-- Flechas de navegación (visibles solo en md-lg) -->
+    <div class="flex justify-end gap-x-3 mb-8 mr-10 md:flex lg:hidden">
+      <button id="prev" class="flex items-center justify-center w-8 h-8 bg-[#333336] text-white rounded-full">
+        ❮
+      </button>
+      <button id="next" class="flex items-center justify-center w-8 h-8 bg-[#333336] text-white rounded-full">
+        ❯
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const carousel = document.getElementById('desk-carousel') as HTMLElement | null;
+  const nextBtn  = document.getElementById('next') as HTMLButtonElement | null;
+  const prevBtn  = document.getElementById('prev') as HTMLButtonElement | null;
+  const cardWidth = 260;
+  let scrollPosition = 0;
+
+  function isMdOnly(): boolean { return window.innerWidth < 1024; }
+
+  function updateScrollButtons() {
+    if (nextBtn && prevBtn) {
+      const show = isMdOnly();
+      nextBtn.style.display = show ? 'flex' : 'none';
+      prevBtn.style.display = show ? 'flex' : 'none';
+      if (!show && carousel) { carousel.scrollTo({ left: 0 }); scrollPosition = 0; }
+    }
+  }
+
+  nextBtn?.addEventListener('click', () => {
+    if (!isMdOnly() || !carousel) return;
+    scrollPosition += cardWidth;
+    carousel.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+  });
+  prevBtn?.addEventListener('click', () => {
+    if (!isMdOnly() || !carousel) return;
+    scrollPosition = Math.max(0, scrollPosition - cardWidth);
+    carousel.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+  });
+
+  updateScrollButtons();
+  window.addEventListener('resize', updateScrollButtons);
+</script>
+
+<style>
+.parent {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 11px;
+}
+
+/* Cada columna es flex para que el CTA quede siempre alineado al fondo */
+.svc-card-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-cta {
+  margin-top: auto !important;
+}
+
+.icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 20px;
+  transition: box-shadow 0.2s;
+}
+
+/* Badge chip */
+.badge-chip {
+  display: inline-block;
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  /* light: versión con contraste | dark: vibrante */
+  color: var(--card-color-light);
+}
+:global(.dark) .badge-chip {
+  color: var(--card-color);
+}
+
+/* CTA button por card */
+.card-cta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: transparent;
+  font-family: var(--font-inter);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #86868B;
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  text-align: left;
+}
+:global(.dark) .card-cta {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.arrow-icon {
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 0.18s;
+}
+
+/* Hover — light usa versión legible, dark usa vibrante */
+.svc-card-wrap:hover .icon-box {
+  box-shadow: 0 0 0 1.5px var(--card-color-light);
+}
+:global(.dark) .svc-card-wrap:hover .icon-box {
+  box-shadow: 0 0 0 1.5px var(--card-color);
+}
+.svc-card-wrap:hover .card-cta {
+  border-color: var(--card-color-light);
+  color: var(--card-color-light);
+}
+:global(.dark) .svc-card-wrap:hover .card-cta {
+  border-color: var(--card-color);
+  color: var(--card-color);
+}
+.svc-card-wrap:hover .arrow-icon {
+  transform: translateX(3px);
+}
+
+/* Canales (lima) → esmeralda en light mode */
+html:not(.dark) .svc-card-wrap[data-index="1"] img {
+  filter: hue-rotate(68deg) saturate(0.83) brightness(0.5);
+}
+
+/* Estado activo (panel abierto) */
+.svc-card-wrap.active .icon-box {
+  box-shadow: 0 0 0 2px var(--card-color-light);
+}
+:global(.dark) .svc-card-wrap.active .icon-box {
+  box-shadow: 0 0 0 2px var(--card-color);
+}
+.svc-card-wrap.active .card-title {
+  color: var(--card-color-light);
+}
+:global(.dark) .svc-card-wrap.active .card-title {
+  color: var(--card-color);
+}
+.svc-card-wrap.active .card-cta {
+  background: var(--card-color-light);
+  border-color: var(--card-color-light);
+  color: #fff;
+}
+:global(.dark) .svc-card-wrap.active .card-cta {
+  background: var(--card-color);
+  border-color: var(--card-color);
+  color: #fff;
+}
+</style>

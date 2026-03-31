@@ -1,0 +1,93 @@
+---
+import Image from "astro/components/Image.astro";
+import arrow from "@images/arrow.webp"
+
+const faqs = [
+    {
+        question: "¿Cuánto cuesta desarrollar un software a la medida?",
+        answer: "Cada proyecto es diferente, por eso no manejamos precios fijos. El costo depende del alcance, la complejidad y el tiempo de entrega. Lo que sí garantizamos: presupuesto claro antes de iniciar, sin letras pequeñas ni sorpresas. Escríbenos y te damos una cotización sin costo en menos de 24 horas."
+    },
+    {
+        question: "¿Cuánto tiempo tarda en estar listo mi proyecto?",
+        answer: "Un sitio web o landing page: 2 a 4 semanas. Una aplicación web o móvil a la medida: entre 6 semanas y 4 meses, según su complejidad. Trabajamos con entregas por etapas y te mostramos avances desde la primera semana para que siempre sepas exactamente cómo va tu proyecto."
+    },
+    {
+        question: "¿Tengo que saber de tecnología para trabajar con ustedes?",
+        answer: "Para nada. Nuestro equipo se encarga de toda la parte técnica. Tú nos cuentas el problema de tu negocio y nosotros lo convertimos en una solución digital que funciona. Hablamos en tu idioma, no en el de las máquinas."
+    },
+    {
+        question: "¿Qué pasa si el resultado no es lo que esperaba?",
+        answer: "Nunca llegamos a ese punto porque trabajamos con validaciones y aprobaciones en cada etapa del proyecto. Pero si algo no está a tu gusto, lo ajustamos sin costo adicional hasta que quedes satisfecho. Tu aprobación es el único indicador que nos importa."
+    },
+    {
+        question: "¿Ofrecen soporte después del lanzamiento?",
+        answer: "Sí. Todos nuestros proyectos incluyen un período de soporte post-lanzamiento. Además, ofrecemos planes de mantenimiento mensual para que tu plataforma siempre esté actualizada, segura y funcionando al 100%, sin que tengas que preocuparte por nada técnico."
+    },
+];
+---
+
+<div class="w-full">
+    {faqs.map(({ question, answer }) => (
+        <details class="faq border-b border-gray-200 dark:border-[#ffffff20] last:border-0">
+            <summary class="question flex items-center justify-between gap-4 py-4 px-2 cursor-pointer
+                            text-base md:text-base lg:text-lg xl:text-xl
+                            font-bold font-inter
+                            text-[#15242F] dark:text-[#F5F5F7]
+                            list-none select-none">
+                <span>{question}</span>
+                <Image
+                    src={arrow}
+                    alt=""
+                    aria-hidden="true"
+                    class="arrow object-contain w-4 h-4 shrink-0 opacity-60 dark:invert"
+                />
+            </summary>
+            <div class="rebote overflow-hidden px-2 pb-4
+                        text-base md:text-base lg:text-base xl:text-lg
+                        text-[#36455D] dark:text-[#86868B]
+                        leading-relaxed">
+                {answer}
+            </div>
+        </details>
+    ))}
+</div>
+
+<style>
+    /* Ocultar el marcador nativo del details */
+    summary::-webkit-details-marker { display: none; }
+    summary::marker { display: none; }
+
+    .question:hover {
+        color: #FF7070;
+    }
+
+    .arrow {
+        transition: transform 0.3s ease;
+    }
+
+    details[open] .arrow {
+        transform: rotate(180deg);
+    }
+
+    .rebote {
+        animation: rebote 0.35s ease-out;
+    }
+
+    @keyframes rebote {
+        0%   { transform: translateY(-8px); opacity: 0; }
+        60%  { transform: translateY(4px);  opacity: 1; }
+        100% { transform: translateY(0);    opacity: 1; }
+    }
+</style>
+
+<script>
+    const faqs = document.querySelectorAll(".faq");
+
+    faqs.forEach(faq => {
+        faq.addEventListener("click", () => {
+            faqs.forEach(item => {
+                if (item !== faq) item.removeAttribute("open");
+            });
+        });
+    });
+</script>

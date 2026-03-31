@@ -1,0 +1,70 @@
+---
+/**
+ * AnimatedCounter — contador numérico con ease-out cúbico.
+ * Se activa cuando el elemento entra al viewport (IntersectionObserver).
+ *
+ * Props:
+ *   target   — número final que debe mostrar
+ *   class    — clases adicionales de Tailwind/CSS que se aplican al <span>
+ *   duration — duración de la animación en ms (default: 1600)
+ */
+interface Props {
+  target: number;
+  class?: string;
+  duration?: number;
+}
+
+const { target, class: cls = '', duration = 1600 } = Astro.props;
+---
+
+<span
+  class={cls}
+  data-animate-counter
+  data-target={target}
+  data-duration={duration}
+>0</span>
+
+<script>
+  /**
+   * El <script> sin is:inline es procesado por Astro como ES module.
+   * Astro lo deduplica automáticamente: aunque AnimatedCounter se use
+   * N veces en la misma página, este bloque de código se incluye UNA sola vez.
+   */
+  function animateCounter(el: HTMLElement, target: number, duration: number) {
+    let startTime: number | null = null;
+
+    function step(timestamp: number) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      // ease-out cúbico: empieza rápido y desacelera al final
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target).toString();
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = target.toString();
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          const target   = parseInt(el.dataset.target   ?? '0',    10);
+          const duration = parseInt(el.dataset.duration ?? '1600', 10);
+          animateCounter(el, target, duration);
+          observer.unobserve(el);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  document
+    .querySelectorAll<HTMLElement>('[data-animate-counter]')
+    .forEach((el) => observer.observe(el));
+</script>

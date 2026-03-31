@@ -1,0 +1,55 @@
+---
+import Zorro from "@images/zorro.webp";
+import Image from "astro/components/Image.astro";
+import Questions from "./questionsAnswers.astro";
+---
+
+<section class="w-full flex justify-center bg-[#F5F6FA] dark:bg-[#0D0D0D] py-10 md:py-16 lg:py-20 xl:py-24">
+
+    <!-- Mobile (< md) -->
+    <div class="w-[90%] max-w-[560px] flex flex-col bg-[#FFFFFF] dark:bg-[#1a1a1a] rounded-xl md:hidden p-4 sm:p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <Image src={Zorro} alt="Mascota Slyfox" class="w-8 h-8 object-contain" />
+            <h2 class="text-[#15242F] dark:text-[#F5F5F7] text-lg sm:text-xl font-bold font-inter">
+                <span class="text-[#FF7070]">Preguntas?</span> Respuestas.
+            </h2>
+        </div>
+
+        <Questions />
+
+        <div class="flex justify-center mt-6">
+            <div class="flex flex-col items-center gap-3 bg-[#F5F6FA] dark:bg-[#0D0D0D] rounded-2xl p-4 w-full max-w-[280px] sm:max-w-[320px]">
+                <div class="rounded-full w-12 h-12 bg-white flex justify-center items-center">
+                    <Image src={Zorro} alt="Agente de soporte Slyfox" class="w-7 h-7 object-contain" />
+                </div>
+                <p class="text-sm sm:text-base text-center font-inter text-[#15242F] dark:text-[#F5F5F7]">
+                    Soy un ser Humano como tú ¡Pregúntame cualquier cosa!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desktop (md+) -->
+    <div class="hidden md:flex gap-8 lg:gap-12 xl:gap-16 w-[90%] max-w-[1400px] bg-[#FFFFFF] dark:bg-[#1a1a1a] rounded-xl p-8 lg:p-12 xl:p-16">
+
+        <!-- Columna izquierda -->
+        <div class="flex flex-col items-center justify-center flex-shrink-0 w-48 lg:w-56 xl:w-64">
+            <h2 class="text-[#15242F] dark:text-[#F5F5F7] text-center text-3xl lg:text-4xl xl:text-5xl font-bold font-inter">
+                <span class="text-[#FF7070]">Preguntas?</span><br />Respuestas.
+            </h2>
+            <Image
+                src={Zorro}
+                alt="Agente de soporte Slyfox"
+                class="object-contain w-8 lg:w-10 xl:w-12 mt-6"
+            />
+            <p class="text-sm lg:text-base xl:text-lg text-center mt-3 font-inter text-[#15242F] dark:text-[#F5F5F7] w-[90%]">
+                Soy un ser Humano como tú ¡Pregúntame cualquier cosa!
+            </p>
+        </div>
+
+        <!-- Columna derecha — preguntas -->
+        <div class="flex-1 min-w-0">
+            <Questions />
+        </div>
+    </div>
+</section>

@@ -1,0 +1,599 @@
+---
+import { tarjetas } from '@data/cards';
+import { Image }    from 'astro:assets';
+
+const meta = [
+  { short: 'Software',  desc: 'Sistemas que encajan en tu operación, no al revés.',            keys: ['A medida','Escalable','Integrado'],   cta: 'Ver cómo lo hacemos',  num:'01', color:'#FF6B6B', bg:'rgba(255,107,107,0.13)', lc:'#C0392B', lb:'rgba(192,57,43,0.08)'  },
+  { short: 'Canales',   desc: 'Ventas, soporte y atención unificados en una sola plataforma.', keys: ['CRM','WhatsApp','Automatización'],    cta: 'Explorar solución',    num:'02', color:'#C5F135', bg:'rgba(197,241,53,0.11)',  lc:'#15803D', lb:'rgba(21,128,61,0.08)'   },
+  { short: 'Digital',   desc: 'De procesos manuales a flujos que trabajan por ti.',            keys: ['Diagnóstico','Procesos','Adopción'],  cta: 'Ver enfoque',          num:'03', color:'#00E5AA', bg:'rgba(0,229,170,0.11)',   lc:'#007A5E', lb:'rgba(0,122,94,0.08)'    },
+  { short: 'UI / UX',  desc: 'Interfaces que los usuarios entienden desde el primer clic.',   keys: ['Research','Figma','Conversión'],      cta: 'Ver proceso',          num:'04', color:'#7C6FF5', bg:'rgba(124,111,245,0.11)', lc:'#4F46E5', lb:'rgba(79,70,229,0.08)'  },
+  { short: 'Seguridad', desc: 'Protege lo que construiste antes de que sea tarde.',            keys: ['Auditoría','GDPR','ISO 27001'],       cta: 'Ver auditoría',        num:'05', color:'#F43F62', bg:'rgba(244,63,98,0.11)',   lc:'#BE123C', lb:'rgba(190,18,60,0.08)'  },
+];
+---
+
+<!--
+  La sección ocupa 600 vh para dar espacio de scroll.
+  El wrapper interno es sticky (top:0, 100vh) — ambos lados
+  permanecen fijos. El scroll determina qué servicio está activo.
+-->
+<section
+  class="sdr-section hidden md:block"
+  id="sdr-section"
+  aria-label="Nuestros servicios"
+>
+  <div class="sdr-sticky">
+    <div class="sdr-wrap">
+
+      <!-- ── IZQUIERDA: slides superpuestos, uno visible ── -->
+      <div class="sdr-left">
+
+        <!-- Encabezado fijo en la parte superior -->
+        <div class="sdr-header">
+          <p class="sdr-sect-label">Nuestros servicios</p>
+          <h2 class="sdr-sect-title">
+            Tecnología que entra<br />en tu negocio.
+          </h2>
+          <p class="sdr-sect-desc">
+            Diseñamos, construimos e integramos<br />soluciones para empresas que necesitan<br />un aliado técnico real.
+          </p>
+        </div>
+
+        {meta.map((m, i) => (
+          <div
+            class={`sdr-slide${i === 0 ? ' active' : ''}`}
+            data-idx={i}
+            style={`--c:${m.color};--b:${m.bg};--cl:${m.lc};--bl:${m.lb};`}
+          >
+            <div class="sdr-halo" aria-hidden="true"></div>
+
+            <div class="sdr-content">
+              <!-- Ícono grande centrado -->
+              <div class="sdr-icon-wrap">
+                <Image
+                  src={tarjetas[i].src}
+                  alt={tarjetas[i].titulo}
+                  width={72}
+                  height={72}
+                  class="sdr-icon"
+                />
+              </div>
+
+              <p class="sdr-num">{m.num}</p>
+              <h3 class="sdr-title">{tarjetas[i].titulo}</h3>
+              <p class="sdr-desc">{m.desc}</p>
+
+              <div class="sdr-keys">
+                {m.keys.map(k => <span class="sdr-key">{k}</span>)}
+              </div>
+
+              <button
+                class="sdr-cta svc-open"
+                data-index={i}
+                aria-label={`${m.cta}: ${tarjetas[i].titulo}`}
+              >
+                {m.cta}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round"
+                  width="13" height="13" aria-hidden="true">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- ── DERECHA: todos los nombres visibles, sticky ── -->
+      <aside class="sdr-names" aria-label="Navegar entre servicios">
+        <div class="sdr-names-inner">
+          {meta.map((m, i) => (
+            <button
+              class={`sdr-name${i === 0 ? ' active' : ''}`}
+              data-idx={i}
+              style={`--c:${m.color};--cl:${m.lc};`}
+              aria-label={`Ir a ${m.short}`}
+            >
+              {m.short}
+              <span class="sdr-line" aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  const section = document.getElementById('sdr-section') as HTMLElement;
+  const slides  = Array.from(document.querySelectorAll<HTMLElement>('.sdr-slide'));
+  const names   = Array.from(document.querySelectorAll<HTMLElement>('.sdr-name'));
+  const COUNT   = slides.length;
+  let current   = 0;
+  let locked    = false; // cooldown entre cambios
+
+  const FADE    = [1, 0.28, 0.13, 0.07, 0.05];
+  const COOLDOWN = 680; // ms — duración de la transición CSS
+
+  // ── Inicializa opacidades en el primer render ──────────
+  function initNames(idx: number) {
+    names.forEach((n, i) => {
+      const dist = Math.abs(i - idx);
+      n.style.setProperty('--op', String(FADE[Math.min(dist, FADE.length - 1)]));
+      n.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ── Activa un slide con animación direccional ──────────
+  function activate(idx: number) {
+    if (idx === current && slides[idx]?.classList.contains('active')) {
+      initNames(idx); // garantiza que nombres estén inicializados
+      return;
+    }
+    const goingDown = idx > current;
+
+    const leaving = slides[current];
+    if (leaving && current !== idx) {
+      leaving.classList.remove('active');
+      leaving.classList.add(goingDown ? 'exit-up' : 'exit-down');
+      const snap = leaving;
+      setTimeout(() => snap.classList.remove('exit-up', 'exit-down'), 500);
+    }
+
+    const entering = slides[idx];
+    if (entering) {
+      entering.classList.add(goingDown ? 'enter-below' : 'enter-above');
+      entering.getBoundingClientRect(); // fuerza reflow
+      entering.classList.add('active');
+      const snap = entering;
+      setTimeout(() => snap.classList.remove('enter-below', 'enter-above'), 700);
+    }
+
+    names.forEach((n, i) => {
+      const dist = Math.abs(i - idx);
+      n.style.setProperty('--op', String(FADE[Math.min(dist, FADE.length - 1)]));
+      n.classList.toggle('active', i === idx);
+    });
+
+    current = idx;
+  }
+
+  // ── Comprueba si la sección está "fijada" en pantalla ──
+  function isSectionActive(): boolean {
+    const rect = section.getBoundingClientRect();
+    return rect.top <= 1 && rect.bottom >= window.innerHeight - 1;
+  }
+
+  // ── Wheel: un tick = un servicio, instantáneo ─────────
+  function handleWheel(e: WheelEvent) {
+    if (!isSectionActive()) return;
+
+    const dir  = e.deltaY > 0 ? 1 : -1;
+    const next = current + dir;
+
+    // En los bordes → deja pasar el scroll natural de la página
+    if (next < 0 || next >= COUNT) return;
+
+    e.preventDefault();
+    if (locked) return;
+    locked = true;
+
+    // Mueve el scroll de la página al slot correcto (sin animación)
+    // para que la sección permanezca sticky en el lugar exacto
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: sectionTop + next * window.innerHeight });
+
+    activate(next);
+    setTimeout(() => { locked = false; }, COOLDOWN);
+  }
+
+  window.addEventListener('wheel', handleWheel, { passive: false });
+
+  // ── Touch (mobile/trackpad): gesto = cambio ───────────
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchend', (e) => {
+    if (!isSectionActive() || locked) return;
+    const dy   = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) < 30) return;            // gesto mínimo 30 px
+    const dir  = dy > 0 ? 1 : -1;
+    const next = current + dir;
+    if (next < 0 || next >= COUNT) return;
+    locked = true;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: sectionTop + next * window.innerHeight });
+    activate(next);
+    setTimeout(() => { locked = false; }, COOLDOWN);
+  }, { passive: true });
+
+  // ── Clic en nombre ────────────────────────────────────
+  names.forEach((n, i) => {
+    n.addEventListener('click', () => {
+      if (locked) return;
+      locked = true;
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: sectionTop + i * window.innerHeight });
+      activate(i);
+      setTimeout(() => { locked = false; }, COOLDOWN);
+    });
+  });
+
+  // ── Sincroniza si el usuario llega con scroll libre ───
+  window.addEventListener('scroll', () => {
+    if (locked) return;
+    const rect     = section.getBoundingClientRect();
+    const scrolled = Math.max(0, -rect.top);
+    const idx      = Math.min(Math.floor(scrolled / window.innerHeight), COUNT - 1);
+    if (idx !== current) activate(idx);
+  }, { passive: true });
+
+  // Sincroniza cuando el usuario navega dentro del ServicePanel
+  window.addEventListener('svc-navigate', (e: Event) => {
+    const idx = (e as CustomEvent<{ index: number }>).detail.index;
+    activate(idx);
+  });
+
+  activate(0);
+</script>
+
+<style>
+/* ── Sección: (COUNT + 1) × 100vh crea el espacio de scroll ── */
+.sdr-section {
+  background: #060606;
+  height: 500vh;
+}
+
+/* Sticky — ambos lados fijos en pantalla */
+.sdr-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Grid */
+.sdr-wrap {
+  display: grid;
+  grid-template-columns: 48% 52%;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+/* ── IZQUIERDA ────────────────────────────────────────────── */
+.sdr-left {
+  position: relative;
+  height: 100%;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+/* Encabezado fijo arriba del panel izquierdo */
+.sdr-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  padding: 36px 56px 28px;
+  background: linear-gradient(
+    to bottom,
+    #060606 60%,
+    transparent 100%
+  );
+}
+
+.sdr-sect-label {
+  font-family: var(--font-inter);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 10px;
+}
+
+.sdr-sect-title {
+  font-family: var(--font-inter);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  line-height: 1.2;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.sdr-sect-desc {
+  font-family: var(--font-inter);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.6;
+}
+
+/* Slides superpuestos — empujan el centro bajo el header */
+.sdr-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-top: 160px; /* espacio para el header */
+  opacity: 0;
+  pointer-events: none;
+}
+.sdr-slide.active {
+  opacity: 1;
+  transform: none !important;
+  pointer-events: auto;
+  transition:
+    opacity  0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Posición de inicio antes de la transición de entrada */
+.sdr-slide.enter-below { transform: translateY(26px); }
+.sdr-slide.enter-above { transform: translateY(-26px); }
+
+/* Salida con su propia transición */
+.sdr-slide.exit-up {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.38s ease, transform 0.38s ease;
+}
+.sdr-slide.exit-down {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.38s ease, transform 0.38s ease;
+}
+
+/* Halo radial */
+.sdr-halo {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 75% 65% at 35% 50%,
+    var(--b),
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+/* Contenido */
+.sdr-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 56px;
+  max-width: 480px;
+}
+
+.sdr-num {
+  font-family: var(--font-inter);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--c);
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.sdr-icon-wrap {
+  width: 128px;
+  height: 128px;
+  border-radius: 28px;
+  background: var(--b);
+  border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px auto; /* centrado */
+}
+.sdr-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.sdr-title {
+  font-family: var(--font-inter);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.2;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.sdr-desc {
+  font-family: var(--font-inter);
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+.sdr-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+.sdr-key {
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 999px;
+  color: var(--c);
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  background: var(--b);
+}
+
+.sdr-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--c);
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  background: transparent;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s;
+}
+.sdr-cta:hover {
+  background: var(--b);
+  border-color: var(--c);
+}
+
+/* ── DERECHA: todos los nombres visibles ─────────────────── */
+.sdr-names {
+  display: flex;
+  align-items: center;
+  padding: 0 52px;
+  height: 100%;
+}
+
+.sdr-names-inner {
+  width: 100%;
+}
+
+.sdr-name {
+  display: block;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-inter);
+  font-weight: 900;
+  font-size: clamp(2.4rem, 5.5vw, 5.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  /* Escala de grises: var(--op) se actualiza en JS */
+  color: rgb(255 255 255 / var(--op, 0.1));
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 3px 0;
+  transition:
+    color    0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.28s ease;
+}
+.sdr-name.active {
+  color: #ffffff;
+}
+.sdr-name:not(.active):hover {
+  transform: translateX(10px);
+}
+
+/* Línea de color bajo el nombre activo */
+.sdr-line {
+  display: block;
+  width: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--c);
+  margin-top: 5px;
+  transition: width 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sdr-name.active .sdr-line {
+  width: 38px;
+}
+
+/* ── LIGHT MODE ─────────────────────────────────────────── */
+html:not(.dark) .sdr-section {
+  background: #f5f5f7;
+}
+html:not(.dark) .sdr-sticky {
+  background: #f5f5f7;
+}
+html:not(.dark) .sdr-left {
+  border-right-color: rgba(0,0,0,0.08);
+}
+html:not(.dark) .sdr-header {
+  background: linear-gradient(to bottom, #f5f5f7 60%, transparent 100%);
+}
+html:not(.dark) .sdr-sect-label {
+  color: rgba(0,0,0,0.4);
+}
+html:not(.dark) .sdr-sect-title {
+  color: #111111;
+}
+html:not(.dark) .sdr-sect-desc {
+  color: rgba(0,0,0,0.45);
+}
+
+/* Halo light */
+html:not(.dark) .sdr-halo {
+  background: radial-gradient(
+    ellipse 75% 65% at 35% 50%,
+    var(--bl),
+    transparent 72%
+  );
+}
+
+/* Número */
+html:not(.dark) .sdr-num {
+  color: var(--cl);
+}
+
+/* Ícono */
+html:not(.dark) .sdr-icon-wrap {
+  background: var(--bl);
+  border-color: color-mix(in srgb, var(--cl) 35%, transparent);
+}
+
+/* Título */
+html:not(.dark) .sdr-title {
+  color: #111111;
+}
+
+/* Descripción */
+html:not(.dark) .sdr-desc {
+  color: rgba(0,0,0,0.5);
+}
+
+/* Keywords */
+html:not(.dark) .sdr-key {
+  color: var(--cl);
+  border-color: color-mix(in srgb, var(--cl) 40%, transparent);
+  background: var(--bl);
+}
+
+/* CTA */
+html:not(.dark) .sdr-cta {
+  color: var(--cl);
+  border-color: color-mix(in srgb, var(--cl) 40%, transparent);
+}
+html:not(.dark) .sdr-cta:hover {
+  background: var(--bl);
+  border-color: var(--cl);
+}
+
+/* Nombres de la derecha */
+html:not(.dark) .sdr-name {
+  color: rgb(0 0 0 / var(--op, 0.1));
+}
+html:not(.dark) .sdr-name.active {
+  color: #111111;
+}
+html:not(.dark) .sdr-line {
+  background: var(--cl);
+}
+
+/* Reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .sdr-slide,
+  .sdr-slide.active,
+  .sdr-slide.exit-up,
+  .sdr-slide.exit-down {
+    transition: opacity 0.2s ease !important;
+    transform: none !important;
+  }
+  .sdr-name,
+  .sdr-line { transition: none !important; }
+}
+</style>

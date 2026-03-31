@@ -1,0 +1,48 @@
+---
+import SunIcon from "@images/sun.webp";
+import MoonIcon from "@images/moon.webp";
+import Image from "astro/components/Image.astro";
+
+const {className=""} = Astro.props;
+---
+
+<button class={"theme-toggle bg-[#E8E7E7] dark:bg-[#231F20] w-12 lg:w-16 h-6 lg:h-8 px-[3px] lg:px-[4px] rounded-full cursor-pointer " + className} aria-label="Cambiar tema claro/oscuro">
+  <span
+    class="dark_mode-icon_container block w-[20px] lg:w-[26px]
+    after:border-[#FF7070] dark:after:border-white after:animate-rotate
+    h-[20px] lg:h-[26px] rounded-full
+    relative bg-[#979797] dark:bg-[#d9d9d91a]
+    dark:translate-x-[22px] dark:lg:translate-x-[28px]"
+  >
+    <Image
+      class="dark_mode-icon opacity-100 dark:opacity-0"
+      src={SunIcon}
+      alt="icono que indica que el modo claro esta activo"
+    />
+    <Image
+      class="dark_mode-icon opacity-0 dark:opacity-100"
+      src={MoonIcon}
+      alt="icono que indica que el modo oscuro esta activo"
+    />
+  </span>
+</button>
+
+<style>
+  @reference "tailwindcss";
+  @custom-variant dark (&:where(.dark, .dark *));
+
+  .dark_mode-icon_container::after {
+    content: "";
+    @apply
+        absolute top-1/2 left-1/2
+        translate-[-50%] rounded-full
+        border border-dashed
+        w-[36px] lg:w-[46px]
+        h-[36px] lg:h-[46px];
+  }
+
+  .dark_mode-icon {
+    @apply absolute top-1/2 left-1/2 translate-[-50%] w-[15px] lg:w-[20px];
+  }
+</style>
+

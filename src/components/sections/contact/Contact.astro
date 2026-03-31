@@ -1,0 +1,213 @@
+---
+import Image from "astro/components/Image.astro";
+import ContactForm from "@components/Shared/ContactForm.astro";
+import Uvas from "@images/uvas.webp";
+import Star from "@images/Star.png";
+import Corazon from "@images/corazon.png";
+import Rayo from "@images/rayo.webp";
+import Bomba from "@images/bomba.webp";
+import Mandarina from "@images/mandarina.webp";
+import Patilla from "@images/patilla.webp";
+import Sun from "@images/sun.webp";
+import Probeta from "@images/Probeta.webp";
+import Hongo from "@images/hongo.webp";
+import Zorro from "@images/manitoslyfox.png";
+---
+
+<section id="contact" class="bg-[#fbfbfb] dark:bg-[#0D0D0D] w-full justify-center hidden md:flex">
+    <div class="ct-wrap">
+
+        <!-- ── Columna izquierda — copy + decoraciones (solo desktop) ── -->
+        <div class="ct-left ct-left-desktop">
+
+            <!-- Frutas / pixel art decorativo -->
+            <div class="fruit-item" style="top:8%; left:12%;" aria-hidden="true">
+                <Image src={Uvas}      alt="" class="fruit-img" style="width:38px;" />
+            </div>
+            <div class="fruit-item" style="top:6%; left:62%;" aria-hidden="true">
+                <Image src={Star}      alt="" class="fruit-img" style="width:32px;" />
+            </div>
+            <div class="fruit-item" style="top:5%; right:4%;" aria-hidden="true">
+                <Image src={Mandarina} alt="" class="fruit-img" style="width:40px;" />
+            </div>
+            <div class="fruit-item" style="top:28%; left:4%;" aria-hidden="true">
+                <Image src={Probeta}   alt="" class="fruit-img" style="width:28px;" />
+            </div>
+            <div class="fruit-item" style="top:22%; left:52%;" aria-hidden="true">
+                <Image src={Sun}       alt="" class="fruit-img" style="width:30px;" />
+            </div>
+            <div class="fruit-item" style="top:20%; right:2%;" aria-hidden="true">
+                <Image src={Patilla}   alt="" class="fruit-img" style="width:34px;" />
+            </div>
+            <div class="fruit-item" style="top:50%; left:6%;" aria-hidden="true">
+                <Image src={Bomba}     alt="" class="fruit-img" style="width:36px;" />
+            </div>
+            <div class="fruit-item" style="top:55%; left:50%;" aria-hidden="true">
+                <Image src={Rayo}      alt="" class="fruit-img" style="width:28px;" />
+            </div>
+            <div class="fruit-item" style="top:60%; right:3%;" aria-hidden="true">
+                <Image src={Hongo}     alt="" class="fruit-img" style="width:32px;" />
+            </div>
+            <div class="fruit-item" style="top:72%; left:30%;" aria-hidden="true">
+                <Image src={Corazon}   alt="" class="fruit-img" style="width:38px;" />
+            </div>
+
+            <!-- Headline -->
+            <div class="ct-copy">
+                <h2 class="ct-heading">
+                    ¿Listo para<br />
+                    transformar tu<br />
+                    negocio? <span class="ct-accent">¡Hablemos!</span><span class="ct-dot">.</span>
+                </h2>
+            </div>
+
+            <!-- Zorro mascota -->
+            <div class="ct-zorro" aria-hidden="true">
+                <Image src={Zorro} alt="" class="zorro-img" />
+            </div>
+        </div>
+
+        <!-- ── Columna derecha — formulario ── -->
+        <div class="ct-right">
+            <div class="ct-form-card">
+                <p class="ct-form-title">¡Hola!</p>
+                <p class="ct-form-sub">¡Adelante! Envíanos los detalles de tu proyecto.</p>
+                <ContactForm variant="section" prefix="ct" />
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<style>
+/* ── Layout ─────────────────────────────────── */
+.ct-wrap {
+    width: 92%;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* ── Columna izquierda ───────────────────────── */
+.ct-left-desktop {
+    display: none;
+}
+
+.ct-left {
+    position: relative;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.fruit-item {
+    position: absolute;
+    z-index: 1;
+    will-change: transform;
+    animation: fruit-float 20s infinite linear alternate;
+}
+
+.fruit-img {
+    animation: fruit-spin 100s infinite linear;
+}
+
+@keyframes fruit-float {
+    100% { transform: translate(-30px, -30px); }
+}
+@keyframes fruit-spin {
+    100% { transform: rotate(-720deg); }
+}
+
+.ct-copy {
+    position: relative;
+    z-index: 2;
+    padding: 0 12px;
+}
+
+.ct-heading {
+    font-family: var(--font-inter);
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    color: #31323D;
+    text-align: center;
+}
+
+:global(.dark) .ct-heading { color: #F5F5F7; }
+
+.ct-accent { color: #5137F0; }
+.ct-dot    { color: #FF7070; }
+
+/* Zorro */
+.ct-zorro {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+    position: relative;
+    z-index: 2;
+}
+
+.zorro-img {
+    width: clamp(120px, 20vw, 220px);
+    object-fit: contain;
+}
+
+/* ── Columna derecha — form ──────────────────── */
+.ct-form-card {
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 20px;
+    padding: clamp(24px, 4vw, 40px);
+}
+
+:global(.dark) .ct-form-card {
+    background: #1a1a1a;
+    border-color: #2a2a2a;
+}
+
+.ct-form-title {
+    font-family: var(--font-inter);
+    font-weight: 800;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    color: #31323D;
+    margin-bottom: 4px;
+}
+
+:global(.dark) .ct-form-title { color: #F5F5F7; }
+
+.ct-form-sub {
+    font-family: var(--font-inter);
+    font-size: 0.9rem;
+    color: #86868B;
+    margin-bottom: 24px;
+}
+
+/* ── Desktop layout ─────────────────────────── */
+@media (min-width: 768px) {
+    .ct-wrap {
+        flex-direction: row;
+        align-items: center;
+        gap: clamp(32px, 5vw, 64px);
+    }
+
+    .ct-left-desktop {
+        display: flex;
+        flex: 1;
+        min-height: 560px;
+    }
+
+    .ct-right {
+        flex: 0 0 clamp(340px, 45%, 520px);
+    }
+
+    .ct-heading {
+        text-align: left;
+    }
+
+    .ct-zorro {
+        justify-content: flex-start;
+    }
+}
+</style>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(xargs sed:*)",
+      "Bash(npx astro:*)",
+      "Bash(grep -r \"information-cards\\\\|LanguageBar\\\\|Select\" c:/Users/suari/OneDrive/Documents/new-slyfox-landing-development/src --include=*.astro --include=*.ts -l)"
+    ]
+  }
+}

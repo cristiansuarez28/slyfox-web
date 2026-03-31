@@ -1,0 +1,273 @@
+---
+import Image from "astro/components/Image.astro";
+import ContactBg from "@images/contactenos.jpg";
+import LogoLight from "@images/logo-slyfox-light.webp";
+import ContactForm from "@components/Shared/ContactForm.astro";
+---
+
+<!-- Backdrop -->
+<div id="modal-backdrop" class="modal-backdrop" aria-hidden="true"></div>
+
+<!-- Modal -->
+<div id="modal-conocenos" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-inner">
+
+        <!-- Imagen de fondo completa -->
+        <Image src={ContactBg} alt="" class="modal-bg" aria-hidden="true" />
+
+        <!-- Overlay: logo + frase encima de la imagen -->
+        <div class="modal-overlay" aria-hidden="true">
+            <Image src={LogoLight} alt="Slyfox" class="overlay-logo" />
+            <h2 class="overlay-phrase">
+                ¿Listo para transformar<br />tu negocio?
+                <span class="ov-accent"> ¡Hablemos!</span><span class="ov-dot">.</span>
+            </h2>
+        </div>
+
+        <!-- Cerrar -->
+        <button id="modal-close" class="modal-close" aria-label="Cerrar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+        </button>
+
+        <!-- Formulario — posicionado sobre el espacio blanco derecho -->
+        <div class="modal-form-panel">
+            <p class="m-title" id="modal-title">¡Hola!<span class="m-dot">.</span></p>
+            <p class="m-sub">¡Adelante! Envíanos los detalles de tu proyecto.</p>
+            <ContactForm variant="modal" prefix="mn" />
+        </div>
+
+    </div>
+</div>
+
+<style>
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.modal-backdrop.open { display: block; opacity: 1; }
+
+.modal-wrap {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.modal-wrap.open { display: flex; }
+
+/* Card principal */
+.modal-inner {
+    position: relative;
+    width: 95%;
+    max-width: 1100px;
+    min-height: 640px;
+    max-height: 92vh;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+    transform: scale(0.93) translateY(24px);
+    opacity: 0;
+    transition: transform 0.38s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+    display: flex;
+    background: #fff;
+}
+.modal-wrap.open .modal-inner { transform: scale(1) translateY(0); opacity: 1; }
+
+/* Imagen de fondo — ocupa toda la card */
+.modal-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left bottom;
+    display: block;
+    pointer-events: none;
+}
+
+/* Overlay izquierdo */
+.modal-left-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 52%;
+    height: 100%;
+    z-index: 2;
+    display: none;
+    pointer-events: none;
+}
+
+@media (min-width: 641px) {
+    .modal-left-overlay { display: block; }
+}
+
+/* Logo — fijo top-left */
+.overlay-logo {
+    position: absolute;
+    top: clamp(16px, 3.5%, 28px);
+    left: clamp(20px, 5%, 36px);
+    width: clamp(80px, 9vw, 110px);
+    object-fit: contain;
+}
+
+/* Heading — centrado en el panel */
+.overlay-heading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -46%);
+    width: 80%;
+    font-family: var(--font-inter);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 2.4vw, 2rem);
+    line-height: 1.25;
+    color: #1E1E1E;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.overlay-accent { color: #5137F0; }
+.overlay-dot    { color: #FF7070; }
+
+/* Botón cerrar */
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.08);
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+.modal-close:hover { background: rgba(0,0,0,0.16); }
+
+/* Panel del formulario — sobre el espacio blanco derecho */
+.modal-form-panel {
+    position: relative;
+    z-index: 2;
+    margin-left: auto;       /* empuja al lado derecho */
+    width: 48%;
+    min-width: 320px;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: #fff;
+    padding: clamp(24px, 3.5vw, 40px) clamp(24px, 3.5vw, 44px);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* En mobile: form ocupa todo el ancho */
+@media (max-width: 640px) {
+    .modal-form-panel {
+        width: 100%;
+        margin-left: 0;
+    }
+    .modal-bg { display: none; }
+}
+
+/* Título */
+.m-title {
+    font-family: var(--font-inter);
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    color: #1E1E1E;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.m-dot { color: #FF7070; }
+
+.m-sub {
+    font-family: var(--font-inter);
+    font-size: 0.875rem;
+    color: #86868B;
+    margin-bottom: 20px;
+}
+
+/* ── Overlay logo + frase ─────────────────────── */
+.modal-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 52%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+@media (min-width: 641px) {
+    .modal-overlay { display: block; }
+}
+
+/* Logo — esquina superior izquierda, independiente */
+.overlay-logo {
+    position: absolute;
+    top: clamp(16px, 3%, 24px);
+    left: clamp(16px, 4%, 28px);
+    width: clamp(76px, 8vw, 104px);
+    object-fit: contain;
+}
+
+/* Frase — centrada en el tercio superior del panel (zona blanca limpia) */
+.overlay-phrase {
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 78%;
+    font-family: var(--font-inter);
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2vw, 1.75rem);
+    line-height: 1.25;
+    color: #1E1E1E;
+    text-align: center;
+}
+
+.ov-accent { color: #5137F0; }
+.ov-dot    { color: #FF7070; }
+</style>
+
+<script>
+    const backdrop = document.getElementById('modal-backdrop')!;
+    const modal    = document.getElementById('modal-conocenos')!;
+    const closeBtn = document.getElementById('modal-close')!;
+
+    function openModal() {
+        backdrop.classList.add('open');
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+        backdrop.classList.remove('open');
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.btn-conocenos').forEach(btn => {
+        btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+</script>

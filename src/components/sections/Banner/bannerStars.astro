@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import Star from "@images/Star.png";
+
+const count = 5;
+---
+
+<!-- role="img" con aria-label semántico para lectores de pantalla -->
+<div
+    id="stars"
+    class="flex flex-row gap-x-0.5 mt-4 mr-18 sm:mr-31 sm:mt-8"
+    role="img"
+    aria-label="Calificación 5 de 5 estrellas"
+>
+    {Array.from({ length: count }).map((_) => (
+        <Image
+            src={Star}
+            alt=""
+            aria-hidden="true"
+            class="star w-3 h-3 mt-1 xl:w-5 xl:h-5"
+        />
+    ))}
+</div>
+
+<style>
+    .star {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .star.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .star.visible:nth-child(1) { transition-delay: 0.2s; }
+    .star.visible:nth-child(2) { transition-delay: 0.4s; }
+    .star.visible:nth-child(3) { transition-delay: 0.6s; }
+    .star.visible:nth-child(4) { transition-delay: 0.8s; }
+    .star.visible:nth-child(5) { transition-delay: 1s; }
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const starsContainer = document.getElementById('stars');
+        const stars = document.querySelectorAll('.star');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    stars.forEach((star, index) => {
+                        setTimeout(() => {
+                            star.classList.add('visible');
+                        }, index * 200);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        if (starsContainer) {
+            observer.observe(starsContainer);
+        }
+    });
+</script>

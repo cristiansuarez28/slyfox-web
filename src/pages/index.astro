@@ -1,0 +1,25 @@
+---
+import Hero from '@components/sections/hero/Hero.astro';
+import Layout from '../layouts/Layout.astro';
+import Banner from '@components/sections/Banner/banner.astro';
+import Cards_Mobile from '@components/sections/cards/CardsMobile.astro';
+import Cards from '@components/sections/cards/Cards.astro';
+import TeamServices from '@components/sections/teamServices/Team-services.astro';
+import Tools from '@components/sections/imagetools/Tools.astro';
+import QuestionsAnswers from '@components/sections/questions/cardQuestionsAnswers.astro';
+import Finaltext from "@components/sections/finaltext/final-text.astro";
+import Footer from '@components/sections/footer/footer.astro';
+---
+
+<Layout>
+    <Hero />
+    <Banner />
+    <div id="servicios" class="scroll-mt-[62px]"></div>
+    <Cards_Mobile />
+    <Cards />
+    <TeamServices />
+    <Tools />
+    <QuestionsAnswers />
+    <Finaltext />
+    <Footer />
+</Layout>

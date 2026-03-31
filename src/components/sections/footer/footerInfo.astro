@@ -1,0 +1,64 @@
+---
+const year = new Date().getFullYear();
+---
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-3 md:px-5 lg:px-8 py-4 gap-2">
+
+    <!-- Copyright + links legales -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 text-[#31313D] dark:text-[#FFFFFF8F]">
+        <span class="text-xs md:text-sm lg:text-base">
+            Copyright © {year} Slyfox S.A.S. Todos los derechos reservados.
+        </span>
+        <div class="flex items-center gap-0 sm:ml-4">
+            <!-- Links legales: próximamente — no se muestran como links activos para no confundir -->
+            <span
+                title="Próximamente"
+                class="legal-soon text-xs md:text-sm lg:text-base pr-2 border-r border-current"
+            >
+                Política de privacidad
+            </span>
+            <span
+                title="Próximamente"
+                class="legal-soon text-xs md:text-sm lg:text-base px-2 border-r border-current"
+            >
+                Aviso legal
+            </span>
+            <span
+                title="Próximamente"
+                class="legal-soon text-xs md:text-sm lg:text-base pl-2"
+            >
+                Mapa del Sitio
+            </span>
+        </div>
+    </div>
+
+    <!-- País -->
+    <span class="text-xs md:text-sm lg:text-base text-[#31313D] dark:text-[#FFFFFF8F] shrink-0">
+        Colombia
+    </span>
+
+</div>
+
+<style>
+    .legal-soon {
+        opacity: 0.45;
+        cursor: default;
+        position: relative;
+    }
+
+    /* Mini badge "Próximamente" al hover */
+    .legal-soon:hover::after {
+        content: "Próximamente";
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #31323D;
+        color: #fff;
+        font-size: 10px;
+        white-space: nowrap;
+        padding: 3px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 10;
+    }
+</style>

@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import customer1 from "@images/customer1.webp";
+import customer2 from "@images/customer2.webp";
+import customer3 from "@images/customer3.webp";
+import customer4 from "@images/customer4.webp";
+import customer5 from "@images/customer5.webp";
+
+const imageCostumer = [
+    { src: customer1, className: 'translate-x-11 animate-customer1' },
+    { src: customer2, className: 'translate-x-8 animate-customer2' },
+    { src: customer3, className: 'translate-x-5 animate-customer3' },
+    { src: customer4, className: 'translate-x-3 animate-customer4' },
+    { src: customer5, className: 'translate-x-1 animate-customer5' },
+]
+---
+
+<!-- aria-label describe el grupo como un todo; las imágenes son decorativas -->
+<div
+    class="flex gap-x-0.5 mt-4 sm:mt-9 sm:ml-20"
+    aria-label="Clientes que confían en Slyfox"
+    role="img"
+>
+    {imageCostumer.map((customer) => (
+        <Image
+            src={customer.src}
+            alt=""
+            aria-hidden="true"
+            width={400}
+            height={300}
+            class={`w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12 rounded-full object-cover transform ${customer.className}`}
+        />
+    ))}
+</div>
+
+<style>
+.animate-customer1 {
+    animation: slideIn 1s ease-out forwards;
+}
+.animate-customer2 {
+    animation: slideIn 1.2s ease-out forwards;
+}
+.animate-customer3 {
+    animation: slideIn 1.4s ease-out forwards;
+}
+.animate-customer4 {
+    animation: slideIn 1.6s ease-out forwards;
+}
+.animate-customer5 {
+    animation: slideIn 1.8s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(200px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+</style>

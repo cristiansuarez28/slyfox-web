@@ -1,0 +1,557 @@
+---
+import { panels } from '@data/panels';
+import { tarjetas } from '@data/cards';
+import { Image } from 'astro:assets';
+import Logo from '@components/Shared/Logo.astro';
+
+// Logo-matched — mismo esquema que CardsDesk/CardsMobile
+const svcColors = [
+  { color: '#FF6B6B', lightColor: '#D94040', bg: 'rgba(255,107,107,0.08)' }, // Software — coral
+  { color: '#C5F135', lightColor: '#15803D', bg: 'rgba(197,241,53,0.08)'  }, // Canales  — lima
+  { color: '#00E5AA', lightColor: '#007A5E', bg: 'rgba(0,229,170,0.08)'   }, // Digital  — cyan
+  { color: '#7C6FF5', lightColor: '#5A4ED4', bg: 'rgba(124,111,245,0.08)' }, // UI/UX    — violeta
+  { color: '#F43F62', lightColor: '#C01A3E', bg: 'rgba(244,63,98,0.08)'   }, // Security — rosa
+];
+---
+
+<!-- Backdrop -->
+<div id="svc-backdrop" class="svc-backdrop" aria-hidden="true"></div>
+
+<!-- Side Panel -->
+<aside
+  id="svc-panel"
+  class="svc-panel"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-label="Detalle del servicio"
+>
+  <!-- Header: navegación + logo + cerrar -->
+  <div class="svc-header">
+    <div class="svc-nav" role="group" aria-label="Navegar entre servicios">
+      <button id="svc-prev" class="svc-nav-btn" aria-label="Servicio anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+          stroke-linejoin="round" width="14" height="14" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <span id="svc-counter" class="svc-counter" aria-live="polite">1 / {panels.length}</span>
+      <button id="svc-next" class="svc-nav-btn" aria-label="Servicio siguiente">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+          stroke-linejoin="round" width="14" height="14" aria-hidden="true">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Logo centrado — ancla de marca -->
+    <div class="svc-logo" aria-hidden="true">
+      <Logo width="88px" />
+    </div>
+
+    <button id="svc-close" class="svc-close-btn" aria-label="Cerrar detalle del servicio">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+        stroke-linejoin="round" width="16" height="16" aria-hidden="true">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Contenido de cada servicio (pre-renderizado, show/hide vía JS) -->
+  {panels.map((s, i) => (
+    <div
+      class="svc-body"
+      data-panel={i}
+      data-cta={s.ctaPrimario}
+      data-titulo={s.titulo}
+      hidden
+      aria-hidden="true"
+      style={`--svc-color: ${svcColors[i].color}; --svc-color-light: ${svcColors[i].lightColor}; --svc-color-bg: ${svcColors[i].bg};`}
+    >
+      <!-- Ícono del servicio -->
+      <div class="svc-icon-wrap">
+        <Image
+          src={tarjetas[i].src}
+          alt={tarjetas[i].titulo}
+          class="svc-icon-img"
+        />
+      </div>
+
+      <!-- Intro -->
+      <div class="svc-intro">
+        <h2 class="svc-titulo">{s.titulo}</h2>
+        <p class="svc-valor">{s.valor}</p>
+        <p class="svc-contexto">{s.contexto}</p>
+      </div>
+
+      <!-- Qué problema resuelve -->
+      <div class="svc-block">
+        <h4 class="svc-label">Qué problema resuelve</h4>
+        <ul class="svc-list">
+          {s.problemas.map(p => <li>{p}</li>)}
+        </ul>
+      </div>
+
+      <!-- Beneficios clave -->
+      <div class="svc-block">
+        <h4 class="svc-label">Beneficios clave</h4>
+        <ul class="svc-list">
+          {s.beneficios.map(b => <li>{b}</li>)}
+        </ul>
+      </div>
+
+      <!-- Qué incluye -->
+      <div class="svc-block">
+        <h4 class="svc-label">Qué incluye</h4>
+        <ul class="svc-list svc-list--check">
+          {s.incluye.map(item => <li>{item}</li>)}
+        </ul>
+      </div>
+
+      <!-- Para quién es ideal -->
+      <div class="svc-ideal-block">
+        <h4 class="svc-label">Para quién es ideal</h4>
+        <p class="svc-ideal-text">{s.idealPara}</p>
+      </div>
+    </div>
+  ))}
+
+  <!-- Footer: CTA -->
+  <div class="svc-footer">
+    <button id="svc-cta" class="svc-cta">Hablemos</button>
+  </div>
+</aside>
+
+<style>
+/* ── Backdrop ───────────────────────────────────────────── */
+.svc-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 890;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.26s ease;
+}
+.svc-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Panel contenedor ───────────────────────────────────── */
+.svc-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(580px, 92vw);
+  height: 100dvh;
+  z-index: 900;
+  background: #ffffff;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: -8px 0 48px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+:global(.dark) .svc-panel {
+  background: #111111;
+  border-left-color: rgba(255, 255, 255, 0.07);
+  box-shadow: -8px 0 48px rgba(0, 0, 0, 0.6);
+}
+.svc-panel.open {
+  transform: translateX(0);
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.svc-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 54px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  flex-shrink: 0;
+}
+:global(.dark) .svc-header {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Logo centrado absolutamente para no desplazar nav ni close */
+.svc-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.svc-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.svc-nav-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: #31323D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.svc-nav-btn:hover {
+  background: #5137F0;
+  color: #fff;
+  border-color: #5137F0;
+}
+:global(.dark) .svc-nav-btn {
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffffeb;
+}
+:global(.dark) .svc-nav-btn:hover {
+  background: #5137F0;
+  border-color: #5137F0;
+  color: #fff;
+}
+
+.svc-counter {
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  color: #86868B;
+  min-width: 32px;
+  text-align: center;
+  user-select: none;
+}
+
+.svc-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: #31323D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.svc-close-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+:global(.dark) .svc-close-btn {
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffffeb;
+}
+:global(.dark) .svc-close-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Body (scrollable) ──────────────────────────────────── */
+.svc-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 28px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+}
+.svc-body[hidden] {
+  display: none;
+}
+:global(.dark) .svc-body {
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}
+
+/* ── Ícono del servicio ─────────────────────────────────── */
+.svc-icon-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: #f5f6f9;
+  margin-bottom: 20px;
+}
+:global(.dark) .svc-icon-wrap {
+  background: #1a1a1a;
+}
+.svc-icon-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+/* Canales (lima) → esmeralda en light mode */
+html:not(.dark) .svc-body[data-panel="1"] .svc-icon-img {
+  filter: hue-rotate(68deg) saturate(0.83) brightness(0.5);
+}
+
+/* ── Intro ──────────────────────────────────────────────── */
+.svc-intro {
+  margin-bottom: 28px;
+}
+.svc-titulo {
+  font-family: var(--font-inter);
+  font-weight: 800;
+  font-size: clamp(1.2rem, 2.5vw, 1.45rem);
+  line-height: 1.3;
+  color: #1E1E1E;
+  margin-bottom: 8px;
+}
+:global(.dark) .svc-titulo {
+  color: #ffffffeb;
+}
+.svc-valor {
+  font-family: var(--font-inter);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--svc-color-light);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+:global(.dark) .svc-valor {
+  color: var(--svc-color);
+}
+.svc-contexto {
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #86868B;
+}
+
+/* ── Bloques de contenido ───────────────────────────────── */
+.svc-block {
+  margin-bottom: 24px;
+}
+.svc-label {
+  font-family: var(--font-inter);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #86868B;
+  margin-bottom: 10px;
+}
+
+/* Lista con bullet púrpura */
+.svc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.svc-list li {
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  color: #31323D;
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.55;
+}
+:global(.dark) .svc-list li {
+  color: #d0d0d0;
+}
+.svc-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--svc-color-light);
+}
+:global(.dark) .svc-list li::before {
+  background: var(--svc-color);
+}
+
+/* Lista "incluye" con check en vez de bullet */
+.svc-list--check li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  color: var(--svc-color-light);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+:global(.dark) .svc-list--check li::before {
+  color: var(--svc-color);
+}
+
+/* ── Bloque "para quién es ideal" ───────────────────────── */
+.svc-ideal-block {
+  margin-bottom: 20px;
+  background: var(--svc-color-bg);
+  border-radius: 10px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--svc-color) 20%, transparent);
+}
+.svc-ideal-text {
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  color: #31323D;
+  line-height: 1.65;
+}
+:global(.dark) .svc-ideal-text {
+  color: #d0d0d0;
+}
+
+/* ── Footer CTA ─────────────────────────────────────────── */
+.svc-footer {
+  padding: 16px 28px 28px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  flex-shrink: 0;
+}
+:global(.dark) .svc-footer {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+.svc-cta {
+  display: block;
+  width: 100%;
+  background: #5137F0;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-inter);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 13px 24px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.15s;
+}
+.svc-cta:hover {
+  background: #4228d4;
+  transform: translateY(-1px);
+}
+.svc-cta:active {
+  transform: translateY(0);
+}
+</style>
+
+<script>
+  const panel     = document.getElementById('svc-panel')!;
+  const backdrop  = document.getElementById('svc-backdrop')!;
+  const prevBtn   = document.getElementById('svc-prev')!;
+  const nextBtn   = document.getElementById('svc-next')!;
+  const closeBtn  = document.getElementById('svc-close')!;
+  const ctaBtn    = document.getElementById('svc-cta')!;
+  const counter   = document.getElementById('svc-counter')!;
+  const panelBodies = Array.from(document.querySelectorAll<HTMLElement>('.svc-body'));
+  const total     = panelBodies.length;
+  let current     = 0;
+
+  /* ── Helpers ──────────────────────────────────────────── */
+  function cardWraps(): NodeListOf<HTMLElement> {
+    return document.querySelectorAll<HTMLElement>('.svc-card-wrap');
+  }
+
+  function showBody(index: number) {
+    panelBodies.forEach((b, i) => {
+      const isActive = i === index;
+      b.hidden = !isActive;
+      b.setAttribute('aria-hidden', String(!isActive));
+    });
+    counter.textContent = `${index + 1} / ${total}`;
+    const cta = panelBodies[index].dataset.cta ?? 'Hablemos';
+    ctaBtn.textContent = cta;
+    const titulo = panelBodies[index].dataset.titulo ?? 'Detalle del servicio';
+    panel.setAttribute('aria-label', `Detalle: ${titulo}`);
+    panelBodies[index].scrollTop = 0;
+  }
+
+  function setActiveCard(index: number) {
+    cardWraps().forEach((wrap, i) => {
+      wrap.classList.toggle('active', i === index);
+    });
+  }
+
+  /* ── Abrir ────────────────────────────────────────────── */
+  function openPanel(index: number) {
+    current = index;
+    showBody(index);
+    setActiveCard(index);
+    panel.classList.add('open');
+    backdrop.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    backdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  /* ── Cerrar ───────────────────────────────────────────── */
+  function closePanel() {
+    panel.classList.remove('open');
+    backdrop.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    setActiveCard(-1); // quita active de todas
+    // Devolver foco al botón que disparó el panel
+    const trigger = document.querySelector<HTMLElement>(
+      `.svc-card-wrap[data-index="${current}"] .svc-open`
+    );
+    trigger?.focus();
+  }
+
+  /* ── Navegar ──────────────────────────────────────────── */
+  function goTo(index: number) {
+    current = (index + total) % total;
+    showBody(current);
+    setActiveCard(current);
+    // Sincroniza el fondo del Cards scroll-driven
+    window.dispatchEvent(new CustomEvent('svc-navigate', { detail: { index: current } }));
+  }
+
+  /* ── Listeners: abrir desde cards ────────────────────── */
+  document.querySelectorAll<HTMLElement>('.svc-open').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.index ?? '0', 10);
+      openPanel(idx);
+    });
+  });
+
+  /* ── Listeners: controles del panel ──────────────────── */
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  closeBtn.addEventListener('click', closePanel);
+  backdrop.addEventListener('click', closePanel);
+
+  /* CTA: cierra el panel y abre el modal de Conócenos */
+  ctaBtn.addEventListener('click', () => {
+    closePanel();
+    // Dispara el modal existente buscando otro btn-conocenos en el DOM
+    setTimeout(() => {
+      const modalTrigger = document.querySelector<HTMLElement>(
+        '.btn-conocenos:not(#svc-cta)'
+      );
+      modalTrigger?.click();
+    }, 80);
+  });
+
+  /* ── Teclado ──────────────────────────────────────────── */
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (!panel.classList.contains('open')) return;
+    if (e.key === 'Escape')     { e.preventDefault(); closePanel(); }
+    if (e.key === 'ArrowLeft')  goTo(current - 1);
+    if (e.key === 'ArrowRight') goTo(current + 1);
+  });
+</script>

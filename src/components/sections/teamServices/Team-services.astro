@@ -1,0 +1,46 @@
+---
+import imagenDesk from "@images/imagendesk.webp";
+import Image from "astro/components/Image.astro";
+import imagenMobile from "@images/imagenmobile.webp"
+---
+
+<!-- Desktop (lg+) -->
+<section aria-labelledby="team-heading-desk" class="hidden lg:block">
+    <Image
+        src={imagenDesk}
+        alt="Equipo Slyfox trabajando en proyectos digitales — diseñadores, desarrolladores y estrategas"
+        class="w-full object-cover"
+    />
+</section>
+
+<!-- Mobile / Tablet (< lg) -->
+<section aria-labelledby="team-heading-mobile" class="lg:hidden w-full overflow-hidden">
+
+    <!-- Imagen — corta e impactante, con fade en el fondo -->
+    <div class="relative w-full h-[280px] sm:h-[360px] md:h-[420px]">
+        <Image
+            src={imagenMobile}
+            alt="Equipo Slyfox trabajando en proyectos digitales"
+            class="w-full h-full object-cover object-center"
+        />
+        <!-- Gradient fade hacia el fondo de la sección -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#fbfbfb] dark:to-[#000000]"></div>
+    </div>
+
+    <!-- Texto — bloque limpio debajo, sin competir con la imagen -->
+    <div class="px-5 sm:px-8 md:px-12 pb-2">
+        <p class="text-[#FF7070] text-sm sm:text-base font-inter font-semibold tracking-wide uppercase mb-2">
+            Nuestro equipo
+        </p>
+        <h2
+            id="team-heading-mobile"
+            class="text-[#1E1E1E] dark:text-[#F5F5F7] text-3xl sm:text-4xl md:text-5xl font-inter font-bold leading-tight mb-4"
+        >
+            Donde las ideas<br />se hacen realidad
+        </h2>
+        <p class="text-[#555] dark:text-[#86868B] text-base sm:text-lg font-inter font-normal leading-relaxed max-w-[560px]">
+            Pensamos, diseñamos, construimos y optimizamos para transformar ideas en soluciones digitales que funcionan, escalan y generan impacto.
+        </p>
+    </div>
+
+</section>

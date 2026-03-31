@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout seo={{
+  title: 'Página no encontrada — Slyfox',
+  description: 'La página que buscas no existe. Vuelve al inicio y encuentra las soluciones digitales que necesitas.',
+}}>
+  <section class="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
+
+    <p class="text-[#5137F0] font-inter font-bold text-[4rem] sm:text-[5rem] leading-none mb-4">
+      404
+    </p>
+
+    <h1 class="text-[#1E1E1E] dark:text-[#ffffffeb] font-inter font-extrabold
+               text-2xl sm:text-3xl lg:text-4xl leading-tight mb-4 max-w-xl">
+      Esta página no existe.
+    </h1>
+
+    <p class="text-[#86868B] font-inter text-base sm:text-lg max-w-sm mb-10 leading-relaxed">
+      Puede que la hayas escrito mal o que hayamos movido algo. No te preocupes.
+    </p>
+
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 bg-[#5137F0] hover:bg-[#4228d4] text-white
+             font-inter font-bold text-sm sm:text-base px-6 py-3 rounded-xl
+             transition-colors duration-200"
+    >
+      Volver al inicio
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+        stroke-linejoin="round" width="16" height="16" aria-hidden="true">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </a>
+
+  </section>
+</Layout>
